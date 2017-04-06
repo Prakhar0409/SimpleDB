@@ -1,6 +1,9 @@
 package simpledb.planner;
 
 import simpledb.tx.Transaction;
+
+import java.util.List;
+
 import simpledb.parse.*;
 import simpledb.query.*;
 
@@ -47,6 +50,13 @@ public class Planner {
       System.out.println("Cmd updated by parser");
       if (obj instanceof InsertData){
     	  System.out.println("***************Inserting into table***********");
+    	  InsertData t = (InsertData) obj;
+    	  System.out.println("TABLE NAME: "+t.tableName());
+    	  List<String> flds = t.fields();
+    	  List<Constant> vals = t.vals();
+    	  for(int i=0;i< flds.size();i++){
+    		  System.out.println(flds.get(i) + " -- "+vals.get(i).getClass().getName());
+    	  }
     	  int ret = uplanner.executeInsert((InsertData)obj, tx);
     	  System.out.println("---------------Insertion Complete------------------");
     	  return ret;

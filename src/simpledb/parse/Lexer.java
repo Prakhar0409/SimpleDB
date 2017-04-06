@@ -51,6 +51,14 @@ public class Lexer {
       return '\'' == (char)tok.ttype;
    }
    
+//   /**
+//    * Returns true if the current token is a string.
+//    * @return true if the current token is a string
+//    */
+//   public boolean matchTimestampConstant() {
+//      return '\'' == (char)tok.ttype;
+//   }
+   
    /**
     * Returns true if the current token is the specified keyword.
     * @param w the keyword string
@@ -109,6 +117,20 @@ public class Lexer {
       nextToken();
       return s;
    }
+   
+//   /**
+//    * Throws an exception if the current token is not 
+//    * a timestamp. 
+//    * Otherwise, returns that timestamp and moves to the next token.
+//    * @return the timestamp value of the current token
+//    */
+//   public String eatTimestampConstant() {
+//      if (!matchTimestampConstant())
+//         throw new BadSyntaxException();
+//      String s = tok.sval; //constants are not converted to lower case
+//      nextToken();
+//      return s;
+//   }
    
    /**
     * Throws an exception if the current token is not the

@@ -40,14 +40,15 @@ public class BasicUpdatePlanner implements UpdatePlanner {
    }
    
    public int executeInsert(InsertData data, Transaction tx) {
-	  System.out.println("Executing insert");
       Plan p = new TablePlan(data.tableName(), tx);
-      System.out.println("Created plan");
       UpdateScan us = (UpdateScan) p.open();
-      us.insert();
+      us.insert();					// adds a new block if required by inserting a blank record
+      System.out.println("Executed insert");
       Iterator<Constant> iter = data.vals().iterator();
       for (String fldname : data.fields()) {
-         Constant val = iter.next();
+    	 System.out.println("fldname: "+fldname);
+    	 Constant val = iter.next();
+         System.out.println("fldname: "+fldname+"   val: "+val+  "     type:"+val.getClass().getName());
          us.setVal(fldname, val);
       }
       us.close();

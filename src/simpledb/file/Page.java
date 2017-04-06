@@ -3,6 +3,7 @@ package simpledb.file;
 import simpledb.server.SimpleDB;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 /**
  * The contents of a disk block in memory.
@@ -50,6 +51,9 @@ public class Page {
     * a good idea to encode this value as a constant. 
     */
    public static final int INT_SIZE = Integer.SIZE / Byte.SIZE;
+   public static final int DATE_SIZE = Long.SIZE;					//32 bytes as from stackoverflow : todo
+   																	//2 - date size put to long size since stored as long
+   
    
    /**
     * The maximum size, in bytes, of a string of length n.
@@ -156,4 +160,29 @@ public class Page {
       contents.putInt(byteval.length);
       contents.put(byteval);
    }
+   
+   /**
+    * Returns the timestamp value at a specified offset of the page.	(was stored as long)
+    * If a timestamp was not stored at that location, 
+    * the behavior of the method is unpredictable.
+    * @param offset the byte offset within the page
+    * @return the integer value at that offset
+    */
+   public synchronized Date getTimestamp(int offset) {
+	   	  contents.position(offset);
+	   	  Date val = new Date(contents.getLong());
+	      return val;
+   }
+   
+   /**
+    * Writes a timestamp to the specified offset on the page.		(gets stored as long value)
+    * @param offset the byte offset within the page
+    * @param val the integer to be written to the page
+    */
+   public synchronized void setTimestamp(int offset, Date val) {
+	   contents.position(offset);
+	   long l = val.getTime();
+	   contents.putLong(l);
+   }
+   
 }

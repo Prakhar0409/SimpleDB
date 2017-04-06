@@ -1,6 +1,9 @@
 package simpledb.record;
 
 import static simpledb.file.Page.*;
+
+import java.util.Date;
+
 import simpledb.file.Block;
 import simpledb.tx.Transaction;
 
@@ -91,6 +94,17 @@ public class RecordPage {
    public void setString(String fldname, String val) {
       int position = fieldpos(fldname);
       tx.setString(blk, position, val);
+   }
+   
+   /**
+    * Stores a string at the specified field
+    * of the current record.
+    * @param fldname the name of the field
+    * @param val the string value stored in that field
+    */
+   public void setTimestamp(String fldname, Date val) {
+      int position = fieldpos(fldname);
+      tx.setTimestamp(blk, position, val);
    }
    
    /**

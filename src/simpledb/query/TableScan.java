@@ -1,6 +1,9 @@
 package simpledb.query;
 
-import static java.sql.Types.INTEGER;
+import static java.sql.Types.*;
+
+import java.util.Date;
+
 import simpledb.tx.Transaction;
 import simpledb.record.*;
 
@@ -77,10 +80,19 @@ public class TableScan implements UpdateScan {
     * @see simpledb.query.UpdateScan#setVal(java.lang.String, simpledb.query.Constant)
     */ 
    public void setVal(String fldname, Constant val) {
-      if (sch.type(fldname) == INTEGER)
+	   System.out.println("look herere bro: "+sch.type(fldname));
+      if (sch.type(fldname) == INTEGER){
+    	  System.out.println("INTEGER");
          rf.setInt(fldname, (Integer)val.asJavaVal());
-      else
-         rf.setString(fldname, (String)val.asJavaVal());
+      }else if(sch.type(fldname) == VARCHAR){
+    	 System.out.println("STRING");
+    	 rf.setString(fldname, (String)val.asJavaVal());
+      }else if(sch.type(fldname) == TIMESTAMP){
+    	  System.out.println("yo man man");
+    	  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
+    	  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		//todo
+    	  System.out.println("boggie wooggie");
+      }
    }
    
    public void setInt(String fldname, int val) {
@@ -89,6 +101,10 @@ public class TableScan implements UpdateScan {
    
    public void setString(String fldname, String val) {
       rf.setString(fldname, val);
+   }
+   
+   public void setTimestamp(String fldname, Date val) {
+	   rf.setTimestamp(fldname, val);
    }
    
    public void delete() {

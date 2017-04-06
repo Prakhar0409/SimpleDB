@@ -2,6 +2,9 @@ package simpledb.tx;
 
 import simpledb.server.SimpleDB;
 import simpledb.file.Block;
+
+import java.util.Date;
+
 import simpledb.buffer.*;
 import simpledb.tx.recovery.RecoveryMgr;
 import simpledb.tx.concurrency.ConcurrencyMgr;
@@ -165,6 +168,26 @@ public class Transaction {
       Buffer buff = myBuffers.getBuffer(blk);
       int lsn = recoveryMgr.setString(buff, offset, val);
       buff.setString(offset, val, txnum, lsn);
+   }
+   
+   /**
+    * Stores a timestamp at the specified offset 
+    * of the specified block.
+    * The method first obtains an XLock on the block.
+    * It then reads the current value at that offset,
+    * puts it into an update log record, and 
+    * writes that record to the log.
+    * Finally, it calls the buffer to store the value,
+    * passing in the LSN of the log record and the transaction's id. 
+    * @param blk a reference to the disk block
+    * @param offset a byte offset within that block
+    * @param val the value to be stored
+    */
+   public void setTimestamp(Block blk, int offset, Date val) {
+      concurMgr.xLock(blk);
+      Buffer buff = myBuffers.getBuffer(blk);
+      int lsn = recoveryMgr.setTimestamp(buff, offset, val);
+      buff.setTimestamp(offset, val, txnum, lsn);
    }
    
    /**

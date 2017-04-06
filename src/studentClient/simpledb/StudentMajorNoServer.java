@@ -20,7 +20,7 @@ public class StudentMajorNoServer {
 			SimpleDB.init("studentdb");
 			
 			// analogous to the connection
-			Transaction tx = new Transaction();
+//			Transaction tx = new Transaction();
 			
 //			 analogous to the statement
 //			String qry = "select SName, DName "
@@ -40,12 +40,18 @@ public class StudentMajorNoServer {
 //			s.close();
 			
 			
+			Transaction tx = new Transaction();
 			/// MODIFICATION
-//			String qry = "create table MAN(Id int,Name varchar(100),Dob timestamp)";
-			String qry = "insert into MAN(Id ,Name ,Dob ) values (1,'Prakhar','2011-10-09 20:00:00')";
+			String qry = "create table MAN1(Id int,Name varchar(100),Dob timestamp)";
 			int i = SimpleDB.planner().executeUpdate(qry, tx);
-			
 			tx.commit();
+			
+			Transaction tx1 = new Transaction();
+			String qry1 = "insert into MAN1(Id ,Name ,Dob ) values (1,'Prakhar','2011-10-09 20:00:00')";
+			int j = SimpleDB.planner().executeUpdate(qry1, tx1);
+			
+			tx1.commit();
+			
 			
 			
 			// analogous to the connection

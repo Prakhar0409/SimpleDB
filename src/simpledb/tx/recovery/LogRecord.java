@@ -13,7 +13,8 @@ public interface LogRecord {
     */
    static final int CHECKPOINT = 0, START = 1,
       COMMIT = 2, ROLLBACK  = 3,
-      SETINT = 4, SETSTRING = 5;
+      SETINT = 4, SETSTRING = 5,
+      SETTIMESTAMP = 5;
    
    static final LogMgr logMgr = SimpleDB.logMgr();
    

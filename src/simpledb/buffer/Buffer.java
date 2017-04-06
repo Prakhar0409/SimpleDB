@@ -1,6 +1,9 @@
 package simpledb.buffer;
 
 import simpledb.server.SimpleDB;
+
+import java.util.Date;
+
 import simpledb.file.*;
 
 /**
@@ -59,6 +62,18 @@ public class Buffer {
    public String getString(int offset) {
       return contents.getString(offset);
    }
+   
+   /**
+    * Returns the timestamp value at the specified offset of the
+    * buffer's page.
+    * If a string was not stored at that location,
+    * the behavior of the method is unpredictable.
+    * @param offset the byte offset of the page
+    * @return the string value at that offset
+    */
+   public Date getTimestamp(int offset) {
+      return contents.getTimestamp(offset);
+   }
 
    /**
     * Writes an integer to the specified offset of the
@@ -100,6 +115,27 @@ public class Buffer {
       if (lsn >= 0)
 	      logSequenceNumber = lsn;
       contents.setString(offset, val);
+   }
+   
+   /**
+    * Writes a timestamp to the specified offset of the
+    * buffer's page.
+    * This method assumes that the transaction has already
+    * written an appropriate log record.
+    * A negative lsn value indicates that a log record
+    * was not necessary.
+    * The buffer saves the id of the transaction
+    * and the LSN of the log record.
+    * @param offset the byte offset within the page
+    * @param val the new timestamp value to be written
+    * @param txnum the id of the transaction performing the modification
+    * @param lsn the LSN of the corresponding log record
+    */
+   public void setTimestamp(int offset, Date val, int txnum, int lsn) {
+      modifiedBy = txnum;
+      if (lsn >= 0)
+	      logSequenceNumber = lsn;
+      contents.setTimestamp(offset, val);
    }
 
    /**

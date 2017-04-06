@@ -90,6 +90,7 @@ public class LogMgr implements Iterable<BasicLogRecord> {
          flush();        // so move to the next block.
          appendNewBlock();
       }
+      System.out.println("meow meow meow!!!");
       for (Object obj : rec)
          appendVal(obj);
       finalizeRecord();
@@ -104,8 +105,10 @@ public class LogMgr implements Iterable<BasicLogRecord> {
    private void appendVal(Object val) {
       if (val instanceof String)
          mypage.setString(currentpos, (String)val);
-      else
+      else if( val instanceof Integer)
          mypage.setInt(currentpos, (Integer)val);
+      else 	// instance of timestamp - Date
+    	  mypage.setTimestamp(currentpos, (Date)val);
       currentpos += size(val);
    }
 
