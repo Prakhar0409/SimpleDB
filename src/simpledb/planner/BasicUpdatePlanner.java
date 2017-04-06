@@ -40,7 +40,9 @@ public class BasicUpdatePlanner implements UpdatePlanner {
    }
    
    public int executeInsert(InsertData data, Transaction tx) {
+	  System.out.println("Executing insert");
       Plan p = new TablePlan(data.tableName(), tx);
+      System.out.println("Created plan");
       UpdateScan us = (UpdateScan) p.open();
       us.insert();
       Iterator<Constant> iter = data.vals().iterator();

@@ -18,7 +18,7 @@ public class Lexer {
    public Lexer(String s) {
       initKeywords();
       tok = new StreamTokenizer(new StringReader(s));
-      tok.ordinaryChar('.');
+      tok.ordinaryChar('.');		//Specifies that the character argument is "ordinary" in this tokenizer.
       tok.lowerCaseMode(true); //ids and keywords are converted
       nextToken();
    }
@@ -149,6 +149,7 @@ public class Lexer {
    private void initKeywords() {
       keywords = Arrays.asList("select", "from", "where", "and",
                                "insert", "into", "values", "delete", "update", "set", 
-                               "create", "table", "int", "varchar", "view", "as", "index", "on");
+                               "create", "table", "int", "varchar", "view", "as", "index", "on",
+                               "timestamp");
    }
 }

@@ -40,17 +40,26 @@ public class Planner {
     * @return an integer denoting the number of affected records
     */
    public int executeUpdate(String cmd, Transaction tx) {
-      Parser parser = new Parser(cmd);
+	  System.out.println("Executing update");
+	  Parser parser = new Parser(cmd);
+      System.out.println("Parser created successfuly");
       Object obj = parser.updateCmd();
-      if (obj instanceof InsertData)
-         return uplanner.executeInsert((InsertData)obj, tx);
-      else if (obj instanceof DeleteData)
+      System.out.println("Cmd updated by parser");
+      if (obj instanceof InsertData){
+    	  System.out.println("***************Inserting into table***********");
+    	  int ret = uplanner.executeInsert((InsertData)obj, tx);
+    	  System.out.println("---------------Insertion Complete------------------");
+    	  return ret;
+   	  }else if (obj instanceof DeleteData)
          return uplanner.executeDelete((DeleteData)obj, tx);
       else if (obj instanceof ModifyData)
          return uplanner.executeModify((ModifyData)obj, tx);
-      else if (obj instanceof CreateTableData)
-         return uplanner.executeCreateTable((CreateTableData)obj, tx);
-      else if (obj instanceof CreateViewData)
+      else if (obj instanceof CreateTableData){
+    	 System.out.println("Creating table");
+         int ret = uplanner.executeCreateTable((CreateTableData)obj, tx);
+         System.out.println("Table created");
+         return ret;
+      }else if (obj instanceof CreateViewData)
          return uplanner.executeCreateView((CreateViewData)obj, tx);
       else if (obj instanceof CreateIndexData)
          return uplanner.executeCreateIndex((CreateIndexData)obj, tx);

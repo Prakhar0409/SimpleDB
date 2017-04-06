@@ -24,8 +24,10 @@ public class SQLInterpreter {
 					break;
 				else if (cmd.startsWith("select"))
 					doQuery(cmd);
-				else
+				else{
+//					System.out.println("Doing an update");
 					doUpdate(cmd);
+				}
 		    }
 	    }
 	    catch (Exception e) {

@@ -55,6 +55,14 @@ public class Schema {
    }
    
    /**
+    * Adds a timestamp field to the schema.
+    * @param fldname the name of the field
+    */
+   public void addTimestampField(String fldname) {
+      addField(fldname, TIMESTAMP, 0);
+   }
+   
+   /**
     * Adds a field to the schema having the same
     * type and length as the corresponding field
     * in another schema.

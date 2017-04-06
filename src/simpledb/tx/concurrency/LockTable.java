@@ -12,7 +12,6 @@ import java.util.*;
  * are removed from the wait list and rescheduled.
  * If one of those transactions discovers that the lock it is waiting for
  * is still locked, it will place itself back on the wait list.
- * @author Edward Sciore
  */
 class LockTable {
    private static final long MAX_TIME = 10000; // 10 seconds

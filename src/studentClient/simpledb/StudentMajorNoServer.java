@@ -22,23 +22,49 @@ public class StudentMajorNoServer {
 			// analogous to the connection
 			Transaction tx = new Transaction();
 			
-			// analogous to the statement
-			String qry = "select SName, DName "
-		        + "from DEPT, STUDENT "
-		        + "where MajorId = DId";	
-			Plan p = SimpleDB.planner().createQueryPlan(qry, tx);
+//			 analogous to the statement
+//			String qry = "select SName, DName "
+//		        + "from DEPT, STUDENT "
+//		        + "where MajorId = DId";
+//			Plan p = SimpleDB.planner().createQueryPlan(qry, tx);
 			
 			// analogous to the result set
-			Scan s = p.open();
+//			Scan s = p.open();
+//			
+//			System.out.println("Name\tMajor");
+//			while (s.next()) {
+//				String sname = s.getString("sname"); //SimpleDB stores field names
+//				String dname = s.getString("dname"); //in lower case
+//				System.out.println(sname + "\t" + dname);
+//			}
+//			s.close();
 			
-			System.out.println("Name\tMajor");
-			while (s.next()) {
-				String sname = s.getString("sname"); //SimpleDB stores field names
-				String dname = s.getString("dname"); //in lower case
-				System.out.println(sname + "\t" + dname);
-			}
-			s.close();
+			
+			/// MODIFICATION
+//			String qry = "create table MAN(Id int,Name varchar(100),Dob timestamp)";
+			String qry = "insert into MAN(Id ,Name ,Dob ) values (1,'Prakhar','2011-10-09 20:00:00')";
+			int i = SimpleDB.planner().executeUpdate(qry, tx);
+			
 			tx.commit();
+			
+			
+			// analogous to the connection
+//			Transaction tx1 = new Transaction();
+//			 analogous to the statement
+//			String qry1 = "insert into MOVIES(Id,Name) values (1,'Kungfu')";
+//			int j = SimpleDB.planner().executeUpdate(qry1, tx1);
+			
+			// analogous to the result set
+//			Scan s = p.open();
+//			
+//			System.out.println("Name\tMajor");
+//			while (s.next()) {
+//				String sname = s.getString("sname"); //SimpleDB stores field names
+//				String dname = s.getString("dname"); //in lower case
+//				System.out.println(sname + "\t" + dname);
+//			}
+//			s.close();
+//			tx1.commit();
 		}
 		catch(Exception e) {
 			e.printStackTrace();

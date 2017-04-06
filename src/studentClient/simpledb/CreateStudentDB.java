@@ -11,7 +11,7 @@ public class CreateStudentDB {
 			conn = d.connect("jdbc:simpledb://localhost", null);
 			Statement stmt = conn.createStatement();
 
-			String s = "create table STUDENT(SId int, SName varchar(10), MajorId int, GradYear int)";
+			String s = "create1 table STUDENT(SId int, SName varchar(10), MajorId int, GradYear int)";
 			stmt.executeUpdate(s);
 			System.out.println("Table STUDENT created.");
 

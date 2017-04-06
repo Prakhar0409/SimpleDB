@@ -9,7 +9,6 @@ import java.util.*;
  * The concurrency manager keeps track of which locks the 
  * transaction currently has, and interacts with the
  * global lock table as needed. 
- * @author Edward Sciore
  */
 public class ConcurrencyMgr {
    

@@ -18,7 +18,9 @@ public class Parser {
 // Methods for parsing predicates, terms, expressions, constants, and fields
    
    public String field() {
-      return lex.eatId();
+      String stok = lex.eatId();
+      System.out.println("tok type:"+stok);
+      return stok;
    }
    
    public Constant constant() {
@@ -182,13 +184,19 @@ public class Parser {
       lex.eatKeyword("table");
       String tblname = lex.eatId();
       lex.eatDelim('(');
+      System.out.println("yoyoyoyo");
       Schema sch = fieldDefs();
+      System.out.println("reached here");
       lex.eatDelim(')');
+      System.out.println("reached here222222");
+
       return new CreateTableData(tblname, sch);
    }
    
    private Schema fieldDefs() {
-      Schema schema = fieldDef();
+	  System.out.println("god god");
+	  Schema schema = fieldDef();
+      System.out.println("man man");
       if (lex.matchDelim(',')) {
          lex.eatDelim(',');
          Schema schema2 = fieldDefs();
@@ -207,13 +215,17 @@ public class Parser {
       if (lex.matchKeyword("int")) {
          lex.eatKeyword("int");
          schema.addIntField(fldname);
-      }
-      else {
+      }else if(lex.matchKeyword("varchar")){
          lex.eatKeyword("varchar");
          lex.eatDelim('(');
          int strLen = lex.eatIntConstant();
          lex.eatDelim(')');
          schema.addStringField(fldname, strLen);
+      }else if(lex.matchKeyword("timestamp")){
+    	  lex.eatKeyword("timestamp");
+    	  schema.addTimestampField(fldname);
+      }else{
+    	  System.out.println("Unknown data type");
       }
       return schema;
    }

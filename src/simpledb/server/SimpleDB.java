@@ -38,8 +38,8 @@ public class SimpleDB {
     */
    public static void init(String dirname) {
       initFileLogAndBufferMgr(dirname);
-      Transaction tx = new Transaction();
-      boolean isnew = fm.isNew();
+      Transaction tx = new Transaction();		//create a new transaction
+      boolean isnew = fm.isNew();				//check filemanager for if new
       if (isnew)
          System.out.println("creating new database");
       else {
@@ -58,6 +58,9 @@ public class SimpleDB {
     * Initializes only the file manager.
     * @param dirname the name of the database directory
     */
+   // FileMgr: The database system stores its data as files within a specified directory.
+   // The file manager provides methods for reading the contents of
+   // a file block to a Java byte buffer,
    public static void initFileMgr(String dirname) {
       fm = new FileMgr(dirname);
    }
@@ -66,9 +69,14 @@ public class SimpleDB {
     * Initializes the file and log managers.
     * @param dirname the name of the database directory
     */
+   // LogMgr
+    // The low-level log manager.
+    // This log manager is responsible for writing log records
+    // into a log file.
+    
    public static void initFileAndLogMgr(String dirname) {
       initFileMgr(dirname);
-      logm = new LogMgr(LOG_FILE);
+      logm = new LogMgr(LOG_FILE);			//logfile is simpledb.log
    }
    
    /**
@@ -77,7 +85,7 @@ public class SimpleDB {
     */
    public static void initFileLogAndBufferMgr(String dirname) {
       initFileAndLogMgr(dirname);
-      bm = new BufferMgr(BUFFER_SIZE);
+      bm = new BufferMgr(BUFFER_SIZE);			//buffer_sze is 8
    }
    
    /**
