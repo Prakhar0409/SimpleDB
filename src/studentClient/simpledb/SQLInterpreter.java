@@ -1,8 +1,14 @@
 package studentClient.simpledb;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+
+import simpledb.query.Scan;
+import simpledb.record.Schema;
+import simpledb.remote.RemoteResultSet;
 import simpledb.remote.SimpleDriver;
 import java.io.*;
+
 
 public class SQLInterpreter {
     private static Connection conn = null;
@@ -47,17 +53,22 @@ public class SQLInterpreter {
 	private static void doQuery(String cmd) {
 		try {
 		    Statement stmt = conn.createStatement();
-		    ResultSet rs = stmt.executeQuery(cmd);
+		    ResultSet rs = stmt.executeQuery(cmd);	//returns RemoteResultSetImpl extends UnicastRemoteObject implements RemoteResultSet {
+		    										//private Scan s;
+		    										//private Schema sch;
+		    										//private RemoteConnectionImpl rconn
 		    ResultSetMetaData md = rs.getMetaData();
 		    int numcols = md.getColumnCount();
 		    int totalwidth = 0;
-
+//		    System.out.println("yo man    INTEGER:"+Types.INTEGER+"      TIMESTAMP:"+Types.TIMESTAMP+"      VARCHAR"+Types.VARCHAR);
 		    // print header
 		    for(int i=1; i<=numcols; i++) {
 				int width = md.getColumnDisplaySize(i);
 				totalwidth += width;
 				String fmt = "%" + width + "s";
+//				System.out.println("col_name:"+md.getColumnName(i)+"       type:"+md.getColumnType(i)+"     fmt:"+fmt);
 				System.out.format(fmt, md.getColumnName(i));
+				
 			}
 			System.out.println();
 			for(int i=0; i<totalwidth; i++)
@@ -72,7 +83,10 @@ public class SQLInterpreter {
 					String fmt = "%" + md.getColumnDisplaySize(i);
 					if (fldtype == Types.INTEGER)
 						System.out.format(fmt + "d", rs.getInt(fldname));
-					else
+					else if(fldtype == Types.TIMESTAMP){
+						SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						System.out.format(fmt + "s", ts.format(rs.getTimestamp(fldname)));
+					}else
 						System.out.format(fmt + "s", rs.getString(fldname));
 				}
 				System.out.println();

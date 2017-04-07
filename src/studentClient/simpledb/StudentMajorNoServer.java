@@ -49,7 +49,7 @@ public class StudentMajorNoServer {
 //			int i = SimpleDB.planner().executeUpdate(qry, tx);
 //			tx.commit();
 //			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-	
+//	
 			
 			
 //			Transaction tx1 = new Transaction();
@@ -60,18 +60,15 @@ public class StudentMajorNoServer {
 ////			
 //			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			
-//			// analogous to the connection
-			Transaction tx2 = new Transaction();
-//			 analogous to the statement
-			String qry2 = "select Id,Name,Dob from MAN1;";
-//			String qry2 = "select Id,Name from movies;";
-			Plan p = SimpleDB.planner().createQueryPlan(qry2, tx2);
 			
-			// analogous to the result set
+			
+			Transaction tx2 = new Transaction();
+			String qry2 = "select Id,Name,Dob from MAN1;";
+			Plan p = SimpleDB.planner().createQueryPlan(qry2, tx2);
+		
 			Scan s = p.open();
 			((ProjectScan) s).printFields();
-			
-			
+				
 			System.out.println("Id\tName\tDob");
 			while (s.next()) {
 				int sid = s.getInt("id"); //SimpleDB stores field names

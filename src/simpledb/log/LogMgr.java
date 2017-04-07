@@ -120,8 +120,9 @@ public class LogMgr implements Iterable<BasicLogRecord> {
       if (val instanceof String) {
          String sval = (String) val;
          return STR_SIZE(sval.length());
-      }
-      else
+      }else if(val instanceof Date){
+    	  return DATE_SIZE;
+      }else
          return INT_SIZE;
    }
 

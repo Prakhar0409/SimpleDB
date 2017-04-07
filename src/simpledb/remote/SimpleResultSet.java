@@ -42,6 +42,15 @@ public class SimpleResultSet extends ResultSetAdapter {
       }
    }
    
+   public Timestamp getTimestamp(String fldname) throws SQLException {
+      try {
+         return rrs.getTimestamp(fldname);
+      }
+      catch (Exception e) {
+         throw new SQLException(e);
+      }
+   }
+   
    public ResultSetMetaData getMetaData() throws SQLException {
       try {
          RemoteMetaData rmd = rrs.getMetaData();
