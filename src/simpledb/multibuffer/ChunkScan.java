@@ -7,6 +7,7 @@ import simpledb.file.Block;
 import simpledb.query.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -94,6 +95,13 @@ public class ChunkScan implements Scan {
     */
    public String getString(String fldname) {
       return rp.getString(fldname);
+   }
+   
+   /**
+    * @see simpledb.query.Scan#getTimestamp(java.lang.String)
+    */
+   public Date getTimestamp(String fldname) {
+      return rp.getTimestamp(fldname);
    }
    
    /**

@@ -56,7 +56,8 @@ public class BasicUpdatePlanner implements UpdatePlanner {
    }
    
    public int executeCreateTable(CreateTableData data, Transaction tx) {
-      SimpleDB.mdMgr().createTable(data.tableName(), data.newSchema(), tx);
+	   //this basically puts table name and record len in tcatinfo file and records corresponding to fields in the fcatinfo file
+      SimpleDB.mdMgr().createTable(data.tableName(), data.newSchema(), tx);		//mdMgr() - returns meta data manager (static since we assume only 1 server per execution of the code)
       return 0;
    }
    

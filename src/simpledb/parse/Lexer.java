@@ -19,8 +19,9 @@ public class Lexer {
       initKeywords();
       tok = new StreamTokenizer(new StringReader(s));
       tok.ordinaryChar('.');		//Specifies that the character argument is "ordinary" in this tokenizer.
-      tok.lowerCaseMode(true); //ids and keywords are converted
-      nextToken();
+      tok.lowerCaseMode(true); 		//automatically lowercases words when ttype==TT_WORD
+      nextToken();					//get the first token - in sval if word or dval if int
+      								// 	int nextToken() - returns the value of ttype or use tok.ttype 
    }
    
 //Methods to check the status of the current token
@@ -48,6 +49,8 @@ public class Lexer {
     * @return true if the current token is a string
     */
    public boolean matchStringConstant() {
+	   //see tokenizer method quotechar(char c); => When the nextToken method encounters a string constant, 
+	   //the ttype field is set to the string delimiter and the sval field is set to the body of the string.
       return '\'' == (char)tok.ttype;
    }
    
@@ -173,5 +176,16 @@ public class Lexer {
                                "insert", "into", "values", "delete", "update", "set", 
                                "create", "table", "int", "varchar", "view", "as", "index", "on",
                                "timestamp");
+   }
+   
+   public void currTok(){
+	   if(tok.ttype == tok.TT_WORD){
+		   System.out.println(tok.sval);
+	   }else if(tok.ttype == tok.TT_NUMBER){
+		   System.out.println(tok.nval);
+	   }else{
+		   System.out.println((char)tok.ttype);
+	   }
+//	   System.out.println("WORD: "+tok.TT_WORD+"      \':"+(int)'\'');
    }
 }

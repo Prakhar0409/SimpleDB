@@ -90,7 +90,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
          flush();        // so move to the next block.
          appendNewBlock();
       }
-      System.out.println("meow meow meow!!!");
       for (Object obj : rec)
          appendVal(obj);
       finalizeRecord();

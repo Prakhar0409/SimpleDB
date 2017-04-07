@@ -20,7 +20,8 @@ public class TableMgr {
     */
    public static final int MAX_NAME = 16;
    
-   private TableInfo tcatInfo, fcatInfo;
+   private TableInfo tcatInfo, fcatInfo;			//tcatinfo saves information about the tables in the db
+   													//and fcatInfo saves info about the fields in the table of the dl 
    
    /**
     * Creates a new catalog manager for the database system.

@@ -2,6 +2,9 @@ package simpledb.index.query;
 
 import simpledb.record.RID;
 import simpledb.query.*;
+
+import java.util.Date;
+
 import simpledb.index.Index;
 
 /**
@@ -86,6 +89,14 @@ public class IndexSelectScan implements Scan {
     */
    public String getString(String fldname) {
       return ts.getString(fldname);
+   }
+   
+   /**
+    * Returns the value of the field of the current data record.
+    * @see simpledb.query.Scan#getTimestamp(java.lang.String)
+    */
+   public Date getTimestamp(String fldname) {
+      return ts.getTimestamp(fldname);
    }
    
    /**

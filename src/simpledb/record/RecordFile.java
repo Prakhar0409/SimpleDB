@@ -84,6 +84,16 @@ public class RecordFile {
    }
    
    /**
+    * Returns the value of the specified field
+    * in the current record.
+    * @param fldname the name of the field
+    * @return the Date value at that field
+    */
+   public Date getTimestamp(String fldname) {
+      return rp.getTimestamp(fldname);
+   }
+   
+   /**
     * Sets the value of the specified field 
     * in the current record.
     * @param fldname the name of the field

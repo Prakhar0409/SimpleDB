@@ -1,6 +1,9 @@
 package studentClient.simpledb;
 
 import simpledb.tx.Transaction;
+
+import java.util.Date;
+
 import simpledb.query.*;
 import simpledb.server.SimpleDB;
 
@@ -40,37 +43,45 @@ public class StudentMajorNoServer {
 //			s.close();
 			
 			
-			Transaction tx = new Transaction();
-			/// MODIFICATION
-			String qry = "create table MAN1(Id int,Name varchar(100),Dob timestamp)";
-			int i = SimpleDB.planner().executeUpdate(qry, tx);
-			tx.commit();
-			
-			Transaction tx1 = new Transaction();
-			String qry1 = "insert into MAN1(Id ,Name ,Dob ) values (1,'Prakhar','2011-10-09 20:00:00')";
-			int j = SimpleDB.planner().executeUpdate(qry1, tx1);
-			
-			tx1.commit();
+//			Transaction tx = new Transaction();
+//			/// MODIFICATION
+//			String qry = "create table MAN1(Id int,Name varchar(100),Dob timestamp)";
+//			int i = SimpleDB.planner().executeUpdate(qry, tx);
+//			tx.commit();
+//			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+	
 			
 			
-			
-			// analogous to the connection
 //			Transaction tx1 = new Transaction();
-//			 analogous to the statement
-//			String qry1 = "insert into MOVIES(Id,Name) values (1,'Kungfu')";
+//			String qry1 = "insert into MAN1(Id ,Name ,Dob ) values (1,'Prakhar','2011-10-09 20:00:00')";
 //			int j = SimpleDB.planner().executeUpdate(qry1, tx1);
+//			
+//			tx1.commit();
+////			
+//			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			
+//			// analogous to the connection
+			Transaction tx2 = new Transaction();
+//			 analogous to the statement
+			String qry2 = "select Id,Name,Dob from MAN1;";
+//			String qry2 = "select Id,Name from movies;";
+			Plan p = SimpleDB.planner().createQueryPlan(qry2, tx2);
 			
 			// analogous to the result set
-//			Scan s = p.open();
-//			
-//			System.out.println("Name\tMajor");
-//			while (s.next()) {
-//				String sname = s.getString("sname"); //SimpleDB stores field names
-//				String dname = s.getString("dname"); //in lower case
-//				System.out.println(sname + "\t" + dname);
-//			}
-//			s.close();
-//			tx1.commit();
+			Scan s = p.open();
+			((ProjectScan) s).printFields();
+			
+			
+			System.out.println("Id\tName\tDob");
+			while (s.next()) {
+				int sid = s.getInt("id"); //SimpleDB stores field names
+				String dname = s.getString("name"); //in lower case
+				Date dob = s.getTimestamp("dob"); //in lower case
+				System.out.println(sid + "\t" + dname+ "\t"+dob);
+			}
+			s.close();
+			tx2.commit();
+			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		}
 		catch(Exception e) {
 			e.printStackTrace();

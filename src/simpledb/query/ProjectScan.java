@@ -57,6 +57,13 @@ public class ProjectScan implements Scan {
          throw new RuntimeException("field " + fldname + " not found.");
    }
    
+   public Date getTimestamp(String fldname) {
+	      if (hasField(fldname))
+	         return s.getTimestamp(fldname);
+	      else
+	         throw new RuntimeException("field " + fldname + " not found.");
+	   }
+   
    /**
     * Returns true if the specified field
     * is in the projection list.
@@ -64,5 +71,16 @@ public class ProjectScan implements Scan {
     */
    public boolean hasField(String fldname) {
       return fieldlist.contains(fldname);
+   }
+   
+   /**
+    * Print all field names
+    */
+   public void printFields() {
+	   Iterator<String> iterator = fieldlist.iterator();
+       while ( iterator.hasNext()){
+    	   String newBo = (String)iterator.next(); 
+           System.out.println("fieldname:"+newBo);
+       }
    }
 }

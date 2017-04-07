@@ -54,8 +54,14 @@ public class TableScan implements UpdateScan {
    public Constant getVal(String fldname) {
       if (sch.type(fldname) == INTEGER)
          return new IntConstant(rf.getInt(fldname));
-      else
-         return new StringConstant(rf.getString(fldname));
+      else if(sch.type(fldname) == TIMESTAMP){
+    	  return new TimestampConstant(rf.getTimestamp(fldname));
+      }else if(sch.type(fldname) == VARCHAR){
+    	  return new StringConstant(rf.getString(fldname));  
+      }else{
+    	  System.out.println("TableScan Panic: Do not recognize the type of the constant being retrieved");
+    	  return new StringConstant(rf.getString(fldname));
+      }
    }
    
    public int getInt(String fldname) {
@@ -64,6 +70,10 @@ public class TableScan implements UpdateScan {
    
    public String getString(String fldname) {
       return rf.getString(fldname);
+   }
+
+   public Date getTimestamp(String fldname) {
+	    return rf.getTimestamp(fldname);
    }
    
    public boolean hasField(String fldname) {

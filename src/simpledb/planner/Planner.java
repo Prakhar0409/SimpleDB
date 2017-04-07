@@ -27,8 +27,11 @@ public class Planner {
     * @return the scan corresponding to the query plan
     */
    public Plan createQueryPlan(String qry, Transaction tx) {
-      Parser parser = new Parser(qry);
+	  System.out.println("Creating query plan");
+	  Parser parser = new Parser(qry);
+      System.out.println("query parsed successfully");
       QueryData data = parser.query();
+      System.out.println("got the query data");
       return qplanner.createPlan(data, tx);
    }
    
@@ -43,13 +46,12 @@ public class Planner {
     * @return an integer denoting the number of affected records
     */
    public int executeUpdate(String cmd, Transaction tx) {
-	  System.out.println("Executing update");
-	  Parser parser = new Parser(cmd);
-      System.out.println("Parser created successfuly");
-      Object obj = parser.updateCmd();
-      System.out.println("Cmd updated by parser");
+	  Parser parser = new Parser(cmd);					//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
+      Object obj = parser.updateCmd();					//Obj is the following
+      													// - for create => CreateTableData(tblname-string, schema- map<string,fieldinfo>)
+      													// - for insert => InsertData(tblname-string,flds-List<sting>,vals<Constant>)
       if (obj instanceof InsertData){
-    	  System.out.println("***************Inserting into table***********");
+    	  System.out.println("*********Inserting into table***********");
     	  InsertData t = (InsertData) obj;
     	  System.out.println("TABLE NAME: "+t.tableName());
     	  List<String> flds = t.fields();
@@ -58,16 +60,14 @@ public class Planner {
     		  System.out.println(flds.get(i) + " -- "+vals.get(i).getClass().getName());
     	  }
     	  int ret = uplanner.executeInsert((InsertData)obj, tx);
-    	  System.out.println("---------------Insertion Complete------------------");
     	  return ret;
    	  }else if (obj instanceof DeleteData)
          return uplanner.executeDelete((DeleteData)obj, tx);
       else if (obj instanceof ModifyData)
          return uplanner.executeModify((ModifyData)obj, tx);
       else if (obj instanceof CreateTableData){
-    	 System.out.println("Creating table");
+    	  //--reading here
          int ret = uplanner.executeCreateTable((CreateTableData)obj, tx);
-         System.out.println("Table created");
          return ret;
       }else if (obj instanceof CreateViewData)
          return uplanner.executeCreateView((CreateViewData)obj, tx);

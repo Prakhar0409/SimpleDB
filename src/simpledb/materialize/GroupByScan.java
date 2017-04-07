@@ -116,6 +116,18 @@ public class GroupByScan implements Scan {
       return (String)getVal(fldname).asJavaVal();
    }
    
+   /**
+    * Gets the timestamp value of the specified field.
+    * If the field is a group field, then its value can
+    * be obtained from the saved group value.
+    * Otherwise, the value is obtained from the
+    * appropriate aggregation function.
+    * @see simpledb.query.Scan#getVal(java.lang.String)
+    */
+   public Date getTimestamp(String fldname) {
+      return (Date)getVal(fldname).asJavaVal();
+   }
+   
    /* Returns true if the specified field is either a 
     * grouping field or created by an aggregation function.
     * @see simpledb.query.Scan#hasField(java.lang.String)

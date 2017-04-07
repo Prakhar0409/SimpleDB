@@ -75,6 +75,17 @@ public class RecordPage {
    }
    
    /**
+    * Returns the timestamp value stored for the
+    * specified field of the current record.
+    * @param fldname the name of the field.
+    * @return the timestamp stored in that field
+    */
+   public Date getTimestamp(String fldname) {
+      int position = fieldpos(fldname);
+      return tx.getTimestamp(blk, position);
+   }
+   
+   /**
     * Stores an integer at the specified field
     * of the current record.
     * @param fldname the name of the field

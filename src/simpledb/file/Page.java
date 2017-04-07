@@ -51,7 +51,7 @@ public class Page {
     * a good idea to encode this value as a constant. 
     */
    public static final int INT_SIZE = Integer.SIZE / Byte.SIZE;
-   public static final int DATE_SIZE = Long.SIZE;					//32 bytes as from stackoverflow : todo
+   public static final int DATE_SIZE = Long.SIZE / Byte.SIZE;					//32 bytes as from stackoverflow : todo
    																	//2 - date size put to long size since stored as long
    
    
@@ -67,6 +67,7 @@ public class Page {
     */
    public static final int STR_SIZE(int n) {
       float bytesPerChar = Charset.defaultCharset().newEncoder().maxBytesPerChar();
+//      System.out.println("bytes Per Char: "+bytesPerChar+"   encoding"+Charset.defaultCharset());
       return INT_SIZE + (n * (int)bytesPerChar);
    }
    
@@ -142,11 +143,14 @@ public class Page {
     * @return the string value at that offset
     */
    public synchronized String getString(int offset) {
-      contents.position(offset);
+	  contents.position(offset);
       int len = contents.getInt();
+//      System.out.print("Getting: from offset:"+ offset  +"        String len: "+len);
       byte[] byteval = new byte[len];
       contents.get(byteval);
-      return new String(byteval);
+      String ret = new String(byteval);
+//      System.out.println("       String: "+ret);
+      return ret;
    }
    
    /**
@@ -155,7 +159,8 @@ public class Page {
     * @param val the string to be written to the page
     */
    public synchronized void setString(int offset, String val) {
-      contents.position(offset);
+//	  System.out.println("Storing: at offset:"+ offset +"String: "+val);
+	  contents.position(offset);
       byte[] byteval = val.getBytes();
       contents.putInt(byteval.length);
       contents.put(byteval);
@@ -166,7 +171,7 @@ public class Page {
     * If a timestamp was not stored at that location, 
     * the behavior of the method is unpredictable.
     * @param offset the byte offset within the page
-    * @return the integer value at that offset
+    * @return the Date value at that offset
     */
    public synchronized Date getTimestamp(int offset) {
 	   	  contents.position(offset);

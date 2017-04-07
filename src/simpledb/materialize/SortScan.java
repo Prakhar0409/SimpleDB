@@ -120,6 +120,15 @@ public class SortScan implements Scan {
    }
    
    /**
+    * Gets the timestamp value of the specified field
+    * of the current scan.
+    * @see simpledb.query.Scan#getTimestamp(java.lang.String)
+    */
+   public Date getTimestamp(String fldname) {
+      return currentscan.getTimestamp(fldname);
+   }
+   
+   /**
     * Returns true if the specified field is in the current scan.
     * @see simpledb.query.Scan#hasField(java.lang.String)
     */

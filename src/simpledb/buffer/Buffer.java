@@ -60,16 +60,17 @@ public class Buffer {
     * @return the string value at that offset
     */
    public String getString(int offset) {
-      return contents.getString(offset);
+	  String tp = contents.getString(offset);
+      return tp;
    }
    
    /**
     * Returns the timestamp value at the specified offset of the
     * buffer's page.
-    * If a string was not stored at that location,
+    * If a timestamp(long) was not stored at that location,
     * the behavior of the method is unpredictable.
     * @param offset the byte offset of the page
-    * @return the string value at that offset
+    * @return the timestamp value at that offset
     */
    public Date getTimestamp(int offset) {
       return contents.getTimestamp(offset);

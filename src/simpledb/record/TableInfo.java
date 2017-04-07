@@ -1,6 +1,6 @@
 package simpledb.record;
 
-import static java.sql.Types.INTEGER;
+import static java.sql.Types.*;
 import static simpledb.file.Page.*;
 import java.util.*;
 
@@ -28,8 +28,10 @@ public class TableInfo {
       offsets  = new HashMap<String,Integer>();
       int pos = 0;
       for (String fldname : schema.fields()) {
-         offsets.put(fldname, pos);
-         pos += lengthInBytes(fldname);
+    	  int len = lengthInBytes(fldname);
+//    	  System.out.println("fieldname: "+fldname+"   pos:"+pos+"    length in bytes:"+len);
+         offsets.put(fldname, pos);				//store the information which fieldname was stored at what position
+         pos += len;			//increment by number of bytes it takes to save the field name
       }
       recordlen = pos;
    }
@@ -88,9 +90,16 @@ public class TableInfo {
    
    private int lengthInBytes(String fldname) {
       int fldtype = schema.type(fldname);
+//      System.out.println("fldname:"+fldname+"    fldtype: "+fldtype +"      INTEGER:"+INTEGER+"       TIMESTAMP:"+TIMESTAMP+"    varchar:"+VARCHAR);
       if (fldtype == INTEGER)
          return INT_SIZE;
-      else
+      else if(fldtype == TIMESTAMP){
+    	  return DATE_SIZE;
+      }else if(fldtype == VARCHAR){
          return STR_SIZE(schema.length(fldname));
+      }else{
+    	  System.out.println("TabelInfo Panic: data field size calculation not known");
+    	  return STR_SIZE(schema.length(fldname));
+      }
    }
 }

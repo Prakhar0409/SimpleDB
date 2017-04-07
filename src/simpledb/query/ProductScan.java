@@ -1,5 +1,7 @@
 package simpledb.query;
 
+import java.util.Date;
+
 /**
  * The scan class corresponding to the <i>product</i> relational
  * algebra operator.
@@ -82,6 +84,19 @@ public class ProductScan implements Scan {
          return s1.getInt(fldname);
       else
          return s2.getInt(fldname);
+   }
+   
+   /** 
+    * Returns the string value of the specified field.
+    * The value is obtained from whichever scan
+    * contains the field.
+    * @see simpledb.query.Scan#getString(java.lang.String)
+    */
+   public Date getTimestamp(String fldname) {
+      if (s1.hasField(fldname))
+         return s1.getTimestamp(fldname);
+      else
+         return s2.getTimestamp(fldname);
    }
    
    /** 

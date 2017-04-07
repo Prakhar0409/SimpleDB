@@ -1,5 +1,7 @@
 package simpledb.query;
 
+import java.util.Date;
+
 import simpledb.record.*;
 
 /**
@@ -38,6 +40,7 @@ public class SelectScan implements UpdateScan {
     * @see simpledb.query.Scan#next()
     */
    public boolean next() {
+	   
       while (s.next())
          if (pred.isSatisfied(s))
          return true;
@@ -57,7 +60,12 @@ public class SelectScan implements UpdateScan {
    }
    
    public String getString(String fldname) {
+	   System.out.println("before error");
       return s.getString(fldname);
+   }
+   
+   public Date getTimestamp(String fldname) {
+      return s.getTimestamp(fldname);
    }
    
    public boolean hasField(String fldname) {

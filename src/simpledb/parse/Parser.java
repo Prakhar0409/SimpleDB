@@ -12,21 +12,23 @@ public class Parser {
    private Lexer lex;
    
    public Parser(String s) {
-      lex = new Lexer(s);
+      lex = new Lexer(s);					//define streamtokenizer on the query
    }
    
 // Methods for parsing predicates, terms, expressions, constants, and fields
    
    public String field() {
       String stok = lex.eatId();
-      System.out.println("tok type:"+stok);
       return stok;
    }
    
    public Constant constant() {
-      if (lex.matchStringConstant())
-         return new StringConstant(lex.eatStringConstant());
-      else
+      if (lex.matchStringConstant()){						//first character is quote then string
+    	 StringConstant sc = new StringConstant(lex.eatStringConstant());
+//    	 System.out.print("string const is: "+sc.asJavaVal()+   "     next tok:");
+//    	 lex.currTok();
+    	 return sc;
+      }else													//first character is not quote then int
          return new IntConstant(lex.eatIntConstant());
    }
    
@@ -97,8 +99,12 @@ public class Parser {
          return delete();
       else if (lex.matchKeyword("update"))
          return modify();
-      else
+      else if (lex.matchKeyword("create"))
          return create();
+      else{
+    	  System.out.println("Parser: Could not match the first word in the query");
+    	  return create();		//or better return null
+      }
    }
    
    private Object create() {
@@ -184,19 +190,15 @@ public class Parser {
       lex.eatKeyword("table");
       String tblname = lex.eatId();
       lex.eatDelim('(');
-      System.out.println("yoyoyoyo");
       Schema sch = fieldDefs();
-      System.out.println("reached here");
       lex.eatDelim(')');
-      System.out.println("reached here222222");
-
+      // parsed upto create table <tbname> (f1 t1,f2 t2)
+      //schema is a map<string,fieldinfo> where field info is (int type, int len)
       return new CreateTableData(tblname, sch);
    }
    
    private Schema fieldDefs() {
-	  System.out.println("god god");
 	  Schema schema = fieldDef();
-      System.out.println("man man");
       if (lex.matchDelim(',')) {
          lex.eatDelim(',');
          Schema schema2 = fieldDefs();
@@ -207,7 +209,8 @@ public class Parser {
    
    private Schema fieldDef() {
       String fldname = field();
-      return fieldType(fldname);
+      Schema s = fieldType(fldname);		//scehma is a simple map<string,fieldinfo> where fieldinfo is int,int
+      return s;
    }
    
    private Schema fieldType(String fldname) {
