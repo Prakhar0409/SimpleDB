@@ -69,7 +69,7 @@ public class RemoteMetaDataImpl extends UnicastRemoteObject implements RemoteMet
     * probably get displayed improperly.
     * @see simpledb.remote.RemoteMetaData#getColumnDisplaySize(int)
     */
-   public int getColumnDisplaySize(int column) throws RemoteException {
+   public int getColumnDisplaySize(int column) throws RemoteException { 
 	  String fldname = getColumnName(column);
       int fldtype = sch.type(fldname);
       int fldlength = sch.length(fldname);
