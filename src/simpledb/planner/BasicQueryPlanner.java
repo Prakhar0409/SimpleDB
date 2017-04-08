@@ -27,17 +27,23 @@ public class BasicQueryPlanner implements QueryPlanner {
          else
             plans.add(new TablePlan(tblname, tx));
       }
+      System.out.println("Reached step1");
       
       //Step 2: Create the product of all table plans
       Plan p = plans.remove(0);
       for (Plan nextplan : plans)
          p = new ProductPlan(p, nextplan);
       
+      System.out.println("Reached step2");
+      
       //Step 3: Add a selection plan for the predicate
       p = new SelectPlan(p, data.pred());
+      System.out.println("Reached step3");
       
       //Step 4: Project on the field names
       p = new ProjectPlan(p, data.fields());
+      
+      System.out.println("Reached step4");
       return p;
    }
 }

@@ -28,9 +28,9 @@ public class Planner {
     */
    public Plan createQueryPlan(String qry, Transaction tx) {
 	  System.out.println("Creating query plan");
-	  Parser parser = new Parser(qry);
+	  Parser parser = new Parser(qry);		//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
       System.out.println("query parsed successfully");
-      QueryData data = parser.query();
+      QueryData data = parser.query();		//returns QueryData-- note select conditions on timestamp fields are still stringConstants
       System.out.println("got the query data");
       return qplanner.createPlan(data, tx);
    }

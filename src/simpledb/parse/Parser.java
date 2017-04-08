@@ -113,8 +113,12 @@ public class Parser {
          return createTable();
       else if (lex.matchKeyword("view"))
          return createView();
-      else
+      else if (lex.matchKeyword("index"))
          return createIndex();
+      else{
+    	  System.out.println("Parser panic: Unknown create <unknown_keyword> command.");
+    	  return createIndex();
+      }
    }
    
 // Method for parsing delete commands
@@ -246,12 +250,14 @@ public class Parser {
    
 //  Method for parsing create index commands
    
-   public CreateIndexData createIndex() {
+   public CreateIndexData createIndex() {		//create index <idxname> on movies(dob)
       lex.eatKeyword("index");
-      String idxname = lex.eatId();
-      lex.eatKeyword("on");
-      String tblname = lex.eatId();
-      lex.eatDelim('(');
+      lex.currTok();
+      String idxname = lex.eatId();				//index name
+      System.out.println("index name:"+idxname);
+      lex.eatKeyword("on");					
+      String tblname = lex.eatId();				//tblname
+      lex.eatDelim('(');					
       String fldname = field();
       lex.eatDelim(')');
       return new CreateIndexData(idxname, tblname, fldname);

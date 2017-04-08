@@ -45,13 +45,13 @@ public class StudentMajorNoServer {
 			
 //			Transaction tx = new Transaction();
 //			/// MODIFICATION
-//			String qry = "create table MAN1(Id int,Name varchar(100),Dob timestamp)";
+//			String qry = "create table MAN1(Id int,Name varchar(10),Dob timestamp)";
 //			int i = SimpleDB.planner().executeUpdate(qry, tx);
 //			tx.commit();
 //			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-//	
-			
-			
+////	
+//			
+//			
 //			Transaction tx1 = new Transaction();
 //			String qry1 = "insert into MAN1(Id ,Name ,Dob ) values (1,'Prakhar','2011-10-09 20:00:00')";
 //			int j = SimpleDB.planner().executeUpdate(qry1, tx1);
@@ -59,14 +59,16 @@ public class StudentMajorNoServer {
 //			tx1.commit();
 ////			
 //			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-			
-			
-			
+//			
+//			
+//			
 			Transaction tx2 = new Transaction();
-			String qry2 = "select Id,Name,Dob from MAN1;";
-			Plan p = SimpleDB.planner().createQueryPlan(qry2, tx2);
+			String qry2 = "select Id,Name,Dob from MAN1 where dob='2011-10-09 20:00:00';";
+			Plan p = SimpleDB.planner().createQueryPlan(qry2, tx2);			//this is ProjectPlan
 		
+			System.out.println("Plan done");
 			Scan s = p.open();
+			System.out.println("scan done");
 			((ProjectScan) s).printFields();
 				
 			System.out.println("Id\tName\tDob");
@@ -79,6 +81,16 @@ public class StudentMajorNoServer {
 			s.close();
 			tx2.commit();
 			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			
+			
+			
+//			Transaction tx3 = new Transaction();
+//			/// MODIFICATION
+//			String qry3 = "create index sleep on MAN1 ( Id )";
+//			int i3 = SimpleDB.planner().executeUpdate(qry3, tx3);
+//			tx3.commit();
+//			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+//	
 		}
 		catch(Exception e) {
 			e.printStackTrace();

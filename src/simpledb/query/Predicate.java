@@ -8,7 +8,8 @@ import java.util.*;
  *
  */
 public class Predicate {
-   private List<Term> terms = new ArrayList<Term>();
+   private List<Term> terms = new ArrayList<Term>();		//where a Term is Expressions lhs,rhs 
+   															//Expression is String fldname or Constant 
    
    /**
     * Creates an empty predicate, corresponding to "true".

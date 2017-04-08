@@ -9,7 +9,7 @@ import java.util.Collection;
   */
 public class ProjectPlan implements Plan {
    private Plan p;
-   private Schema schema = new Schema();
+   private Schema schema = new Schema();		//Schema is a map<String fldname,Fieldinfo> FieldInfo - <int type,int len>
    
    /**
     * Creates a new project node in the query tree,

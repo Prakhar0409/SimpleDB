@@ -60,7 +60,6 @@ public class SelectScan implements UpdateScan {
    }
    
    public String getString(String fldname) {
-	   System.out.println("before error");
       return s.getString(fldname);
    }
    

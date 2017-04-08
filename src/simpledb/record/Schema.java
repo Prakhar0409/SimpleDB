@@ -12,7 +12,7 @@ import java.util.*;
  *
  */
 public class Schema {
-   private Map<String,FieldInfo> info = new HashMap<String,FieldInfo>();
+   private Map<String,FieldInfo> info = new HashMap<String,FieldInfo>();	//FieldInfo - int type,int length
    
    /**
     * Creates an empty schema.

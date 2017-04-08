@@ -2,6 +2,7 @@ package simpledb.query;
 
 import static java.sql.Types.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import simpledb.tx.Transaction;
@@ -52,11 +53,16 @@ public class TableScan implements UpdateScan {
     * @see simpledb.query.Scan#getVal(java.lang.String)
     */
    public Constant getVal(String fldname) {
-      if (sch.type(fldname) == INTEGER)
+      if (sch.type(fldname) == INTEGER){
          return new IntConstant(rf.getInt(fldname));
-      else if(sch.type(fldname) == TIMESTAMP){
-    	  return new TimestampConstant(rf.getTimestamp(fldname));
-      }else if(sch.type(fldname) == VARCHAR){
+      }else if(sch.type(fldname) == TIMESTAMP){
+    	  SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	  String tp = ts.format(rf.getTimestamp(fldname)).toString();
+    	  System.out.println("String value: "+tp);
+//    	  return new TimestampConstant(rf.getTimestamp(fldname));
+    	  return new StringConstant(tp);  
+      }else if(sch.type(fldname) == VARCHAR || sch.type(fldname) == TIMESTAMP){
+    	  System.out.println("String value: "+rf.getString(fldname));
     	  return new StringConstant(rf.getString(fldname));  
       }else{
     	  System.out.println("TableScan Panic: Do not recognize the type of the constant being retrieved");
