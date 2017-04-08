@@ -125,6 +125,25 @@ public class Term {
     * @return true if both expressions have the same value in the scan
     */
    public boolean isSatisfied(Scan s) {
+	  if(extra!=null){
+		  // meaning timestamp between was used
+//		  Long mainval = lhs.eval
+		  System.out.println("BITCH I AM COMING!");
+		  TimestampConstant mainval = new TimestampConstant((String)lhs.evaluate(s).asJavaVal());
+		  System.out.println("GAME!");
+		  TimestampConstant smallval = new TimestampConstant((String)rhs.evaluate(s).asJavaVal());
+		  TimestampConstant bigval = new TimestampConstant((String)extra.evaluate(s).asJavaVal());
+		  
+		  long mvv = mainval.asJavaVal().getTime();
+		  System.out.println("Fuck you!");
+		  long sv = smallval.asJavaVal().getTime();
+		  long bv = bigval.asJavaVal().getTime();
+		  if(sv<= mvv && mvv<=bv){
+			  return true;
+		  }else{
+			  return false;
+		  }
+	  }
       Constant lhsval = lhs.evaluate(s);
       Constant rhsval = rhs.evaluate(s);
       return rhsval.equals(lhsval);

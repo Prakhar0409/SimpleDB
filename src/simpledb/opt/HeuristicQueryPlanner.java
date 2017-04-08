@@ -23,6 +23,10 @@ public class HeuristicQueryPlanner implements QueryPlanner {
     * results in the smallest output.
     */
    public Plan createPlan(QueryData data, Transaction tx) {
+	   
+	   		//returns QueryData-- note select conditions on timestamp fields are still stringConstants
+			//QueryData(collection<string> fields, collection<string> tables, predicate)
+			//Predicate(List<Terms>), Term(Expression lhs, Expression rhs,Expression extra)
       
       // Step 1:  Create a TablePlanner object for each mentioned table
       for (String tblname : data.tables()) {
