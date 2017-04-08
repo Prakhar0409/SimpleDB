@@ -26,7 +26,7 @@ public class SelectPlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
-	   System.out.println("SelectPlan.open");
+	   System.out.println("SelectPlan.open returns SelectScan");
       Scan s = p.open();
       return new SelectScan(s, pred);
    }

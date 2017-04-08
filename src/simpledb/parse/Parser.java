@@ -41,9 +41,21 @@ public class Parser {
    
    public Term term() {
       Expression lhs = expression();
-      lex.eatDelim('=');
-      Expression rhs = expression();
-      return new Term(lhs, rhs);
+      if(lex.matchDelim('=')){
+    	  lex.eatDelim('=');
+    	  Expression rhs = expression();
+    	  return new Term(lhs, rhs);
+      }else if(lex.matchKeyword("between")){
+    	  lex.eatKeyword("between");
+    	  Expression rhs = expression();
+    	  Expression extra = expression();
+    	  return new Term(lhs, rhs, extra);
+      }else{
+    	  System.out.println("Parser Panic: neither = nor between");
+    	  lex.eatDelim('=');			//defaulting to what was present earlier in the code
+    	  Expression rhs = expression();
+    	  return new Term(lhs, rhs);
+      }
    }
    
    public Predicate predicate() {

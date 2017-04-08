@@ -1,5 +1,7 @@
 package simpledb.index.query;
 
+import static java.sql.Types.*;
+
 import simpledb.tx.Transaction;
 import simpledb.record.Schema;
 import simpledb.metadata.IndexInfo;
@@ -34,11 +36,17 @@ public class IndexSelectPlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
-	   System.out.println("IndexSelectPlan.open");
+	   System.out.println("IndexSelectPlan.open returns IndexSelectScan(idx,val,Tablescan)");
       // throws an exception if p is not a tableplan.
       TableScan ts = (TableScan) p.open();
       Index idx = ii.open();
-      return new IndexSelectScan(idx, val, ts);
+      if(p.schema().type(ii.getField()) == TIMESTAMP){
+    	  val = new TimestampConstant((String)val.asJavaVal());
+      }
+      System.out.println("Have a tablescan and index on required field");
+      IndexSelectScan iss = new IndexSelectScan(idx, val, ts);
+      System.out.println("IndexSelectScan instantiated successfully");
+      return iss;
    }
    
    /**

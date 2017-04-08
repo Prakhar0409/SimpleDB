@@ -9,6 +9,7 @@ import simpledb.record.Schema;
  */
 public class Term {
    private Expression lhs, rhs;
+   private Expression extra;			//usage <lhs> between <rhs> <extra>
    
    /**
     * Creates a new term that compares two expressions
@@ -19,6 +20,18 @@ public class Term {
    public Term(Expression lhs, Expression rhs) {
       this.lhs = lhs;
       this.rhs = rhs;
+      extra = null;
+   }
+   
+   /**
+    * Creates a new term that does the between operation
+    * @param lhs  the LHS expression
+    * @param rhs  the RHS expression
+    */
+   public Term(Expression lhs, Expression rhs,Expression extra) {
+      this.lhs = lhs;
+      this.rhs = rhs;
+      this.extra = extra;
    }
    
    /**

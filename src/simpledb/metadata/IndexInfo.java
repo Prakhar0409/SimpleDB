@@ -119,4 +119,8 @@ public class IndexInfo {
       }
       return sch;
    }
+   
+   public String getField(){
+	   return fldname;
+   }
 }

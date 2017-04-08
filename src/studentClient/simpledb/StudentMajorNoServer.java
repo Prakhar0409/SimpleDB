@@ -96,11 +96,12 @@ public class StudentMajorNoServer {
 			
 			
 			Transaction tx4 = new Transaction();
-			String qry4 = "select Id,Name,Dob from MAN1 where id=1;";
+			String qry4 = "select Id,Name,Dob from MAN1 where dob='2011-10-09 20:00:00';";
 			Plan p = SimpleDB.planner().createQueryPlan(qry4, tx4);			//this is ProjectPlan
 		
+			System.out.println("-----------yo baby");
 			Scan s = p.open();
-			System.out.println("Printing out the fields");
+			System.out.println("-------------Printing out the fields");
 			((ProjectScan) s).printFields();
 				
 			System.out.println("Id\tName\tDob");

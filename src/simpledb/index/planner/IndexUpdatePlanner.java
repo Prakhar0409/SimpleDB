@@ -2,6 +2,7 @@ package simpledb.index.planner;
 
 import java.util.Iterator;
 import java.util.Map;
+import static java.sql.Types.*;
 
 import simpledb.record.RID;
 import simpledb.record.TableInfo;
@@ -35,6 +36,7 @@ public class IndexUpdatePlanner implements UpdatePlanner {
       RID rid = s.getRid();										//gets the RID of the current record.
       
       
+      System.out.println("HUNGRY");
       // then modify each field, inserting an index record if appropriate
       
     //indexes(fldname,IndexInfo<idxname, tblname, fldname, tx>)
@@ -44,9 +46,13 @@ public class IndexUpdatePlanner implements UpdatePlanner {
          Constant val = valIter.next();
          System.out.println("Modify field " + fldname + " to val " + val);
          s.setVal(fldname, val);
-         
-         IndexInfo ii = indexes.get(fldname);
+         System.out.println("value set--------");
 
+         IndexInfo ii = indexes.get(fldname);
+         int fldtype = p.schema().type(fldname);
+         if(fldtype == TIMESTAMP){
+        	 val = new TimestampConstant((String)val.asJavaVal());
+         }
          //indexing the inserted record
          if (ii != null) {
             Index idx = ii.open();

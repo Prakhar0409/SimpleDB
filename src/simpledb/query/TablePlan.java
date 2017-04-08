@@ -30,7 +30,7 @@ public class TablePlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
-	   System.out.println("TablePlan.open"); 
+	   System.out.println("TablePlan.open returns TableScan"); 
       return new TableScan(ti, tx);
    }
    

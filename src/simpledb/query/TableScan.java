@@ -101,13 +101,12 @@ public class TableScan implements UpdateScan {
     	  System.out.println("INTEGER");
          rf.setInt(fldname, (Integer)val.asJavaVal());
       }else if(sch.type(fldname) == VARCHAR){
-    	 System.out.println("STRING");
+    	 System.out.println("STRINGCONST TO STRINGCONST");
     	 rf.setString(fldname, (String)val.asJavaVal());
       }else if(sch.type(fldname) == TIMESTAMP){
-    	  System.out.println("yo man man");
+    	  System.out.println("TableScan: converting STRINGCONST to TIMESTAMPCONST");
     	  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
     	  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		//todo
-    	  System.out.println("boggie wooggie");
       }
    }
    
@@ -137,5 +136,9 @@ public class TableScan implements UpdateScan {
    
    public void moveToRid(RID rid) {
       rf.moveToRid(rid);
+   }
+   
+   public Schema schema(){
+	   return sch;
    }
 }
