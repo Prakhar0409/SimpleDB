@@ -28,6 +28,7 @@ public class ProductPlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
+	   System.out.println("ProductPlan.open");
       Scan s1 = p1.open();
       Scan s2 = p2.open();
       return new ProductScan(s1, s2);

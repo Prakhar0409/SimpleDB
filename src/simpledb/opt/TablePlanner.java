@@ -35,7 +35,7 @@ class TablePlanner {
       this.tx  = tx;
       myplan   = new TablePlan(tblname, tx);
       myschema = myplan.schema();
-      indexes  = SimpleDB.mdMgr().getIndexInfo(tblname, tx);
+      indexes  = SimpleDB.mdMgr().getIndexInfo(tblname, tx); //indexes(fldname,IndexInfo<idxname, tblname, fldname, tx>)
    }
    
    /**

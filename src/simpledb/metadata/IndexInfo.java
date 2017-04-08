@@ -1,6 +1,6 @@
 package simpledb.metadata;
 
-import static java.sql.Types.INTEGER;
+import static java.sql.Types.*;
 import static simpledb.file.Page.BLOCK_SIZE;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
@@ -47,7 +47,9 @@ public class IndexInfo {
    public Index open() {
       Schema sch = schema();
       // Create new HashIndex for hash indexing
-      return new HashIndex(idxname, sch, tx);
+//      return new HashIndex(idxname, sch, tx);
+      //Creating new Btree index 
+      return new BTreeIndex(idxname,sch,tx);
    }
    
    /**
@@ -66,7 +68,9 @@ public class IndexInfo {
       int rpb = BLOCK_SIZE / idxti.recordLength();
       int numblocks = si.recordsOutput() / rpb;
       // Call HashIndex.searchCost for hash indexing
-      return HashIndex.searchCost(numblocks, rpb);
+//      return HashIndex.searchCost(numblocks, rpb);
+      // Call BTreeIndex.searchCost for hash indexing
+      return BTreeIndex.searchCost(numblocks, rpb);
    }
    
    /**
@@ -105,9 +109,11 @@ public class IndexInfo {
       Schema sch = new Schema();
       sch.addIntField("block");
       sch.addIntField("id");
-      if (ti.schema().type(fldname) == INTEGER)
+      if (ti.schema().type(fldname) == INTEGER){
          sch.addIntField("dataval");
-      else {
+      }else if(ti.schema().type(fldname) == TIMESTAMP){
+    	  sch.addTimestampField("dataval");
+      }else {
          int fldlen = ti.schema().length(fldname);
          sch.addStringField("dataval", fldlen);
       }

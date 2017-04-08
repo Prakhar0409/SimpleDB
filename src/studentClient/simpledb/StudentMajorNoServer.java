@@ -62,13 +62,45 @@ public class StudentMajorNoServer {
 //			
 //			
 //			
-			Transaction tx2 = new Transaction();
-			String qry2 = "select Id,Name,Dob from MAN1 where dob='2011-10-09 20:00:00';";
-			Plan p = SimpleDB.planner().createQueryPlan(qry2, tx2);			//this is ProjectPlan
+//			Transaction tx2 = new Transaction();
+//			String qry2 = "select Id,Name,Dob from MAN1 where dob='2011-10-09 20:00:00';";
+//			Plan p = SimpleDB.planner().createQueryPlan(qry2, tx2);			//this is ProjectPlan
+//		
+//			System.out.println("Plan done");
+//			Scan s = p.open();
+//			System.out.println("scan done");
+//			((ProjectScan) s).printFields();
+//				
+//			System.out.println("Id\tName\tDob");
+//			while (s.next()) {
+//				int sid = s.getInt("id"); //SimpleDB stores field names
+//				String dname = s.getString("name"); //in lower case
+//				Date dob = s.getTimestamp("dob"); //in lower case
+//				System.out.println(sid + "\t" + dname+ "\t"+dob);
+//			}
+//			s.close();
+//			tx2.commit();
+//			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+//			
+			
+			
+//			Transaction tx3 = new Transaction();
+//			/// MODIFICATION
+//			String qry3 = "create index sleep on MAN1 ( Id )";
+//			int i3 = SimpleDB.planner().executeUpdate(qry3, tx3);
+//			tx3.commit();
+//			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+	
+			
+			
+			
+			
+			Transaction tx4 = new Transaction();
+			String qry4 = "select Id,Name,Dob from MAN1 where id=1;";
+			Plan p = SimpleDB.planner().createQueryPlan(qry4, tx4);			//this is ProjectPlan
 		
-			System.out.println("Plan done");
 			Scan s = p.open();
-			System.out.println("scan done");
+			System.out.println("Printing out the fields");
 			((ProjectScan) s).printFields();
 				
 			System.out.println("Id\tName\tDob");
@@ -79,18 +111,14 @@ public class StudentMajorNoServer {
 				System.out.println(sid + "\t" + dname+ "\t"+dob);
 			}
 			s.close();
-			tx2.commit();
+			tx4.commit();
 			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			
 			
 			
-//			Transaction tx3 = new Transaction();
-//			/// MODIFICATION
-//			String qry3 = "create index sleep on MAN1 ( Id )";
-//			int i3 = SimpleDB.planner().executeUpdate(qry3, tx3);
-//			tx3.commit();
-//			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-//	
+			
+			
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace();

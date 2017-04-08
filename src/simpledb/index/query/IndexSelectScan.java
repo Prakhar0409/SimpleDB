@@ -96,6 +96,7 @@ public class IndexSelectScan implements Scan {
     * @see simpledb.query.Scan#getTimestamp(java.lang.String)
     */
    public Date getTimestamp(String fldname) {
+	   System.out.println("Getting timestamp from field: "+fldname);
       return ts.getTimestamp(fldname);
    }
    

@@ -31,6 +31,8 @@ public class Planner {
 	  Parser parser = new Parser(qry);		//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
       System.out.println("query parsed successfully");
       QueryData data = parser.query();		//returns QueryData-- note select conditions on timestamp fields are still stringConstants
+      										//QueryData(collection<string> fields, collection<string> tables, predicate)
+      										//Predicate(List<Terms>), Term(Expression lhs, Expression rhs)
       System.out.println("got the query data");
       return qplanner.createPlan(data, tx);
    }
@@ -48,8 +50,9 @@ public class Planner {
    public int executeUpdate(String cmd, Transaction tx) {
 	  Parser parser = new Parser(cmd);					//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
       Object obj = parser.updateCmd();					//Obj is the following
-      													// - for create => CreateTableData(tblname-string, schema- map<string,fieldinfo>)
-      													// - for insert => InsertData(tblname-string,flds-List<sting>,vals<Constant>)
+      													// - create table=> CreateTableData(tblname-string, schema- map<string,fieldinfo>)
+      													// - insert => InsertData(tblname-string,flds-List<sting>,vals<Constant>)
+      													// - create index=> IndexData(indexname,tablename,fieldname)
       if (obj instanceof InsertData){
     	  System.out.println("*********Inserting into table***********");
     	  InsertData t = (InsertData) obj;
@@ -59,21 +62,21 @@ public class Planner {
     	  for(int i=0;i< flds.size();i++){
     		  System.out.println(flds.get(i) + " -- "+vals.get(i).getClass().getName());
     	  }
-    	  int ret = uplanner.executeInsert((InsertData)obj, tx);
+    	  int ret = uplanner.executeInsert((InsertData)obj, tx);		//gets IndexQueryPlanner and calls function
     	  return ret;
    	  }else if (obj instanceof DeleteData)
          return uplanner.executeDelete((DeleteData)obj, tx);
       else if (obj instanceof ModifyData)
          return uplanner.executeModify((ModifyData)obj, tx);
       else if (obj instanceof CreateTableData){
-    	  //--reading here
          int ret = uplanner.executeCreateTable((CreateTableData)obj, tx);
          return ret;
       }else if (obj instanceof CreateViewData)
          return uplanner.executeCreateView((CreateViewData)obj, tx);
-      else if (obj instanceof CreateIndexData)
-         return uplanner.executeCreateIndex((CreateIndexData)obj, tx);
-      else
+      else if (obj instanceof CreateIndexData){
+    	  System.out.println("%%%%%%%%%%%%%%%%%%% Index: "+((CreateIndexData)obj).indexName());
+    	  return uplanner.executeCreateIndex((CreateIndexData)obj, tx);
+      }else
          return 0;
    }
 }

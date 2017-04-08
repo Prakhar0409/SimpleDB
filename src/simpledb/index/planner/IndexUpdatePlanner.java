@@ -4,10 +4,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import simpledb.record.RID;
+import simpledb.record.TableInfo;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
 import simpledb.index.Index;
 import simpledb.metadata.IndexInfo;
+import simpledb.metadata.StatInfo;
 import simpledb.parse.*;
 import simpledb.planner.*;
 import simpledb.query.*;
@@ -20,17 +22,23 @@ import simpledb.query.*;
  */
 public class IndexUpdatePlanner implements UpdatePlanner {
    
-   public int executeInsert(InsertData data, Transaction tx) {
+   public int executeInsert(InsertData data, Transaction tx) {	//InsertData(tblname-string,flds-List<sting>,vals<Constant>)
       String tblname = data.tableName();
-      Plan p = new TablePlan(tblname, tx);
+      Plan p = new TablePlan(tblname, tx);						//TablePlan(TableInfo,StatInfo,tx);
+      															//TableInfo(schema,Map of fields-offsets,reclen,tbllen)
+      															//Schema(fldname,Fieldinfo<type,len>)
       
       // first, insert the record
-      UpdateScan s = (UpdateScan) p.open();
-      s.insert();
-      RID rid = s.getRid();
+      UpdateScan s = (UpdateScan) p.open();						// Opens a scan corresponding to this plan.
+      															// The scan will be positioned before its first record.
+      s.insert();												//Inserts a new record somewhere in the scan.
+      RID rid = s.getRid();										//gets the RID of the current record.
+      
       
       // then modify each field, inserting an index record if appropriate
-      Map<String,IndexInfo> indexes = SimpleDB.mdMgr().getIndexInfo(tblname, tx);
+      
+    //indexes(fldname,IndexInfo<idxname, tblname, fldname, tx>)
+      Map<String,IndexInfo> indexes = SimpleDB.mdMgr().getIndexInfo(tblname, tx);	
       Iterator<Constant> valIter = data.vals().iterator();
       for (String fldname : data.fields()) {
          Constant val = valIter.next();
@@ -38,6 +46,8 @@ public class IndexUpdatePlanner implements UpdatePlanner {
          s.setVal(fldname, val);
          
          IndexInfo ii = indexes.get(fldname);
+
+         //indexing the inserted record
          if (ii != null) {
             Index idx = ii.open();
             idx.insert(val, rid);
@@ -114,6 +124,8 @@ public class IndexUpdatePlanner implements UpdatePlanner {
    }
    
    public int executeCreateIndex(CreateIndexData data, Transaction tx) {
+	   //creating index  - does not index currently present entries. only indexes the newer entries with insert
+	   System.out.println("Just to confirm bro");
       SimpleDB.mdMgr().createIndex(data.indexName(), data.tableName(), data.fieldName(), tx);
       return 0;
    }

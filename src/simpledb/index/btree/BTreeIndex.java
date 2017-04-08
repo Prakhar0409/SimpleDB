@@ -1,6 +1,9 @@
 package simpledb.index.btree;
 
-import static java.sql.Types.INTEGER;
+import static java.sql.Types.*;
+
+import java.util.Date;
+
 import simpledb.file.Block;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
@@ -48,9 +51,17 @@ public class BTreeIndex implements Index {
       if (page.getNumRecs() == 0) {
 			// insert initial directory entry
          int fldtype = dirsch.type("dataval");
-         Constant minval = (fldtype == INTEGER) ?
-            new IntConstant(Integer.MIN_VALUE) :
-            new StringConstant("");
+         Constant minval = null;
+         if(fldtype == INTEGER){
+        	minval = new IntConstant(Integer.MIN_VALUE); 
+         }else if(fldtype == TIMESTAMP){
+        	 minval = new TimestampConstant(new Date(Long.MIN_VALUE));
+         }else if(fldtype == VARCHAR){
+        	minval =  new StringConstant(""); 
+         }else{
+        	 System.out.println("BTreeIndex Panic: unknown data type");
+        	 minval =  new StringConstant("");
+         }
          page.insertDir(0, minval, 0);
 		}
       page.close();

@@ -28,6 +28,7 @@ public class ProjectPlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
+	   System.out.println("ProjectPlan.open");
       Scan s = p.open();
       return new ProjectScan(s, schema.fields());
    }

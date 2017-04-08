@@ -1,7 +1,10 @@
 package simpledb.index.btree;
 
 import static simpledb.file.Page.*;
-import static java.sql.Types.INTEGER;
+
+import java.util.Date;
+
+import static java.sql.Types.*;
 import simpledb.file.Page;
 import simpledb.buffer.PageFormatter;
 import simpledb.record.TableInfo;
@@ -43,12 +46,15 @@ public class BTPageFormatter implements PageFormatter {
          makeDefaultRecord(page, pos);
    }
    
+   //setting default values
    private void makeDefaultRecord(Page page, int pos) {
       for (String fldname : ti.schema().fields()) {
          int offset = ti.offset(fldname);
-         if (ti.schema().type(fldname) == INTEGER)
+         if (ti.schema().type(fldname) == INTEGER){
             page.setInt(pos + offset, 0);
-         else
+         }else if (ti.schema().type(fldname) == TIMESTAMP){
+        	 page.setTimestamp(pos + offset, new Date(0));
+         }else
             page.setString(pos + offset, "");
       }
    }

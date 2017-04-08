@@ -34,6 +34,7 @@ public class IndexSelectPlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
+	   System.out.println("IndexSelectPlan.open");
       // throws an exception if p is not a tableplan.
       TableScan ts = (TableScan) p.open();
       Index idx = ii.open();

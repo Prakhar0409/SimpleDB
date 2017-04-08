@@ -64,6 +64,7 @@ public class SelectScan implements UpdateScan {
    }
    
    public Date getTimestamp(String fldname) {
+	   System.out.println("In select scan");
       return s.getTimestamp(fldname);
    }
    

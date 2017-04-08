@@ -39,6 +39,7 @@ public class IndexJoinPlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
+	   System.out.println("IndexJoinPlan.open");
       Scan s = p1.open();
       // throws an exception if p2 is not a tableplan
       TableScan ts = (TableScan) p2.open();
