@@ -47,7 +47,6 @@ public class IndexSelectScan implements Scan {
       this.val = val;
       this.bigger = bigger;
       this.between = true;
-      System.out.println("INITIALIZATION 2 form indexselectscan");
       this.ts  = ts;
       beforeFirstBetween();
    }
@@ -70,7 +69,7 @@ public class IndexSelectScan implements Scan {
     */
    public void beforeFirstBetween() {
 	   if(bigger == null){
-		   System.out.println("Index Select Scan in between still bigger is null");
+		   System.out.println("IndexSelectScan Panic: beforeFirstBetween but the bigger number is null");
 	   }
       ((BTreeIndex) idx).beforeFirstBetween(val, bigger);		//go to before first smaller value
    }
@@ -138,7 +137,6 @@ public class IndexSelectScan implements Scan {
     * @see simpledb.query.Scan#getTimestamp(java.lang.String)
     */
    public Date getTimestamp(String fldname) {
-	   System.out.println("Getting timestamp from field: "+fldname);
       return ts.getTimestamp(fldname);
    }
    

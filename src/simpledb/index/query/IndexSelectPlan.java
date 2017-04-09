@@ -55,13 +55,11 @@ public class IndexSelectPlan implements Plan {
       if(p.schema().type(ii.getField()) == TIMESTAMP){
     	  val = new TimestampConstant((String)val.asJavaVal());
       }
-      System.out.println("Have a tablescan and index on required field");
       if(between){
-    	  System.out.println("QUERY BETWEEN WITH INDICES POINT 1 + bigger:"+bigger);
+//    	  System.out.println("QUERY BETWEEN WITH INDICES smaller:"+val +"       bigger:"+bigger);
     	  return new IndexSelectScan(idx, val, bigger, ts);
       }
       IndexSelectScan iss = new IndexSelectScan(idx, val, ts);
-      System.out.println("IndexSelectScan instantiated successfully");
       return iss;
    }
    

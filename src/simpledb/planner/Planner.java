@@ -6,6 +6,7 @@ import java.util.List;
 
 import simpledb.parse.*;
 import simpledb.query.*;
+import simpledb.server.SimpleDB;
 
 /**
  * The object that executes SQL statements.
@@ -49,6 +50,13 @@ public class Planner {
     * @return an integer denoting the number of affected records
     */
    public int executeUpdate(String cmd, Transaction tx) {
+	  if(SimpleDB.writer != null){
+		  SimpleDB.writer.println(cmd);
+	  }
+	  if(cmd.equals("close")){
+		  SimpleDB.writer.close();
+		  return 0;
+	  }
 	  Parser parser = new Parser(cmd);					//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
       Object obj = parser.updateCmd();					//Obj is the following
       													// - create table=> CreateTableData(tblname-string, schema- map<string,fieldinfo>)
@@ -66,7 +74,7 @@ public class Planner {
       }else if (obj instanceof CreateViewData)
          return uplanner.executeCreateView((CreateViewData)obj, tx);
       else if (obj instanceof CreateIndexData){
-    	  System.out.println("%%%%%%%%%%%%%%%%%%% Index: "+((CreateIndexData)obj).indexName());
+    	  //System.out.println("%%%%%%%%%%%%%%%%%%% Index: "+((CreateIndexData)obj).indexName());
     	  return uplanner.executeCreateIndex((CreateIndexData)obj, tx);
       }else
          return 0;

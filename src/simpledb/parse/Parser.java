@@ -275,7 +275,6 @@ public class Parser {
       lex.eatKeyword("index");
       lex.currTok();
       String idxname = lex.eatId();				//index name
-      System.out.println("index name:"+idxname);
       lex.eatKeyword("on");					
       String tblname = lex.eatId();				//tblname
       lex.eatDelim('(');					

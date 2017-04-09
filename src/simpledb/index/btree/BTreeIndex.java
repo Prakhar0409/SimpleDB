@@ -102,9 +102,8 @@ public class BTreeIndex implements Index {
       int blknum = root.search(searchkey);
       root.close();
       Block leafblk = new Block(leafTi.fileName(), blknum);
-      System.out.println("YOYOYOYOYOY MAN");
       if(searchkeyBigger == null){
-    	  System.out.println("NULLLLLL");
+    	  System.out.println("BTreeIndex Panic: In beforeFirstBetween still larger value is null");
       }
       leaf = new BTreeLeaf(leafblk, leafTi, searchkey,searchkeyBigger, tx);
    }
@@ -116,7 +115,7 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#next()
     */
    public boolean next() {
-	   System.out.println("BTreeIndex: calls next");
+	  //System.out.println("BTreeIndex: calls next");
       return leaf.next();
    }
    
@@ -127,7 +126,7 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#next()
     */
    public boolean nextBetween() {
-	   System.out.println("BTreeIndex: calls NEXT-BETWEEN");
+	  //System.out.println("BTreeIndex: calls NEXT-BETWEEN");
       return leaf.nextBetween();
    }
 

@@ -53,7 +53,6 @@ public class SelectScan implements UpdateScan {
    }
    
    public Constant getVal(String fldname) {
-      System.out.println("SelectScan getval called");
 	  return s.getVal(fldname);
    }
    
@@ -66,7 +65,6 @@ public class SelectScan implements UpdateScan {
    }
    
    public Date getTimestamp(String fldname) {
-	   System.out.println("In select scan");
       return s.getTimestamp(fldname);
    }
    

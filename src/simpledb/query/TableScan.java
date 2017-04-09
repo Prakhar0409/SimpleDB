@@ -58,14 +58,14 @@ public class TableScan implements UpdateScan {
       }else if(sch.type(fldname) == TIMESTAMP){
     	  											//converting retrieved timestamp to string
     	  SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    	  String tp = ts.format(rf.getTimestamp(fldname)).toString();
-    	  System.out.println("HEHEHEHE  String (timestamp) value: "+tp);
+    	  
+    	  String tp = ts.format(rf.getTimestamp(fldname));
+//    	  System.out.println("TableScan  String (timestamp) value: "+tp);
 //    	  return new StringConstant(tp);
-    	  TimestampConstant tc = new TimestampConstant(ts.format(rf.getTimestamp(fldname)));
-    	  System.out.println("HOHOHOHOOH: ");
-    	  return tc;
+    	  
+    	  return new TimestampConstant(ts.format(rf.getTimestamp(fldname)));
       }else if(sch.type(fldname) == VARCHAR ){
-    	  System.out.println("String value: "+rf.getString(fldname));
+//    	  System.out.println("TableScan String value: "+rf.getString(fldname));
     	  return new StringConstant(rf.getString(fldname));  
       }else{
     	  System.out.println("TableScan Panic: Do not recognize the type of the constant being retrieved");

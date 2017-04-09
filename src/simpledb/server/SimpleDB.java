@@ -1,6 +1,9 @@
 package simpledb.server;
 
 import simpledb.file.FileMgr;
+
+import java.io.PrintWriter;
+
 import simpledb.buffer.*;
 import simpledb.tx.Transaction;
 import simpledb.log.LogMgr;
@@ -30,6 +33,7 @@ public class SimpleDB {
    private static BufferMgr   bm;
    private static LogMgr      logm;
    private static MetadataMgr mdm;
+   public static PrintWriter writer;
    
    /**
     * Initializes the system.
@@ -48,6 +52,11 @@ public class SimpleDB {
       }
       initMetadataMgr(isnew, tx);
       tx.commit();
+      try{
+    	  writer = new PrintWriter("Queries.txt", "UTF-8");
+      }catch(Exception e){
+    	  System.out.println("Could not open a write file");
+      }
    }
    
    // The following initialization methods are useful for 

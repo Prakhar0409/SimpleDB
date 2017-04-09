@@ -72,8 +72,8 @@ public class BTreeLeaf {
     * @return false if there are no more leaf records for the search key
     */
    public boolean next() {
-	   System.out.println("BTreeLeaf: calls next currentslot: "+currentslot+"     numrecs:"+contents.getNumRecs()+"   searchkey:"+searchkey);
-	   currentslot++;
+	  //System.out.println("BTreeLeaf: calls next. currentslot: "+currentslot+" | numrecs:"+contents.getNumRecs()+" | searchkey:"+searchkey);
+	  currentslot++;
       if (currentslot >= contents.getNumRecs()){ 
     	  System.out.println("BTreeLeaf: try overflow");
     	  return tryOverflow();
@@ -90,13 +90,12 @@ public class BTreeLeaf {
     * @return false if there are no more leaf records for the search key
     */
    public boolean nextBetween() {
-	   System.out.println("BTreeLeaf: calls next currentslot: "+currentslot+"     numrecs:"+contents.getNumRecs()+"   searchkey:"+searchkey+"    bigger:"+searchkeyBigger);
+//	   System.out.println("BTreeLeaf: calls next. currentslot: "+currentslot+" | numrecs:"+contents.getNumRecs()+" | searchkey:"+searchkey+" | bigger:"+searchkeyBigger);
 	   currentslot++;
-	   System.out.println("---------->   current slot:"+contents.getDataVal(currentslot));
       if (currentslot >= contents.getNumRecs()){ 
-    	  System.out.println("BTreeLeaf: try overflow");
+    	  System.out.println("BTreeLeaf: try overflow");		//happens on the last record of the leaf
     	  return tryOverflow();
-      }else if (between(searchkey,searchkeyBigger,contents.getDataVal(currentslot)) )
+      }else if (between(searchkey,searchkeyBigger,contents.getDataVal(currentslot)))
          return true;
       else 
          return tryOverflow(); 
