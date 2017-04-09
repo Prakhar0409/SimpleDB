@@ -1,5 +1,6 @@
 package simpledb.query;
 
+@SuppressWarnings("serial")
 public class InvalidDateFormatError extends RuntimeException{
 	
     //Parameterless Constructor

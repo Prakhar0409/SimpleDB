@@ -8,6 +8,7 @@ import simpledb.record.RID;
 import simpledb.record.TableInfo;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
+import simpledb.exceptions.MemoryError;
 import simpledb.index.Index;
 import simpledb.metadata.IndexInfo;
 import simpledb.metadata.StatInfo;
@@ -37,9 +38,9 @@ public class IndexUpdatePlanner implements UpdatePlanner {
       //StatInfo getStatInfo(String tblname, TableInfo ti, Transaction tx)
 	  
       System.out.println("NUM RECORDS (before insertion): "+si.recordsOutput());
-      if(si.recordsOutput() >= 2){
+      if(si.recordsOutput() >= 100000){
     	  System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> SERVER: MemoryError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    	  return -1;
+    	  throw new MemoryError();
       }
       s.insert();												//Inserts a new record somewhere in the scan.
       RID rid = s.getRid();										//gets the RID of the current record.
