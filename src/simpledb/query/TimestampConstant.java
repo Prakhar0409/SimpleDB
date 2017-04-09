@@ -2,6 +2,7 @@ package simpledb.query;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -25,12 +26,15 @@ public class TimestampConstant implements Constant {
     */
    public TimestampConstant(String s) {
 	   SimpleDateFormat tmp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   tmp.setLenient(false);
       try {
-		val = tmp.parse(s);
+    	 val = tmp.parse(s);
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+		//		e.printStackTrace();		
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> InvalidDateFormatError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 	}
+	  
    }
   
    

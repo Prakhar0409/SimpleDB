@@ -106,8 +106,9 @@ public class TableScan implements UpdateScan {
     	 rf.setString(fldname, (String)val.asJavaVal());
       }else if(sch.type(fldname) == TIMESTAMP){
     	  System.out.println("TableScan: converting STRINGCONST to TIMESTAMPCONST");
-    	  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
-    	  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		//todo
+		  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
+		  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		//todo
+	 
       }
    }
    

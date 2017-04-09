@@ -49,7 +49,14 @@ public class Parser {
     	  lex.eatKeyword("between");
     	  Expression rhs = expression();
     	  Expression extra = expression();
-    	  return new Term(lhs, rhs, extra);
+    	  long small = (new TimestampConstant ( (String)rhs.asConstant().asJavaVal())).asJavaVal().getTime();
+    	  long big = (new TimestampConstant ( (String)extra.asConstant().asJavaVal())).asJavaVal().getTime();
+    	  if(big<small){
+    		  System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> InvalidIntervalError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    		  return null;
+    	  }else{
+    		  return new Term(lhs, rhs, extra);
+    	  }
       }else{
     	  System.out.println("Parser Panic: neither = nor between");
     	  lex.eatDelim('=');			//defaulting to what was present earlier in the code
