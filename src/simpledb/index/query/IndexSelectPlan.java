@@ -16,6 +16,8 @@ public class IndexSelectPlan implements Plan {
    private Plan p;
    private IndexInfo ii;
    private Constant val;
+   private boolean between;
+   private Constant bigger;
    
    /**
     * Creates a new indexselect node in the query tree
@@ -29,6 +31,16 @@ public class IndexSelectPlan implements Plan {
       this.p = p;
       this.ii = ii;
       this.val = val;
+      this.between = false;
+      this.bigger = null;
+   }
+   
+   public IndexSelectPlan(Plan p, IndexInfo ii, Constant val,Constant bigger, Transaction tx) {
+      this.p = p;
+      this.ii = ii;
+      this.val = val;
+      this.bigger = bigger;
+      this.between = true;
    }
    
    /** 
@@ -44,6 +56,10 @@ public class IndexSelectPlan implements Plan {
     	  val = new TimestampConstant((String)val.asJavaVal());
       }
       System.out.println("Have a tablescan and index on required field");
+      if(between){
+    	  System.out.println("QUERY BETWEEN WITH INDICES POINT 1 + bigger:"+bigger);
+    	  return new IndexSelectScan(idx, val, bigger, ts);
+      }
       IndexSelectScan iss = new IndexSelectScan(idx, val, ts);
       System.out.println("IndexSelectScan instantiated successfully");
       return iss;

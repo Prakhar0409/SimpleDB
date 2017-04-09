@@ -40,7 +40,8 @@ public class SelectScan implements UpdateScan {
     * @see simpledb.query.Scan#next()
     */
    public boolean next() {
-	   
+	   System.out.println("SelectScan: Calls next");
+//	   IndexSelectScan iss = (IndexSelectScan) s;
       while (s.next())
          if (pred.isSatisfied(s))
          return true;

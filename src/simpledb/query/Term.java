@@ -87,6 +87,28 @@ public class Term {
    }
    
    /**
+    * Determines if this term is of the form "F=c"
+    * where F is the specified field and c is some constant.
+    * If so, the method returns that constant.
+    * If not, the method returns null.
+    * @param fldname the name of the field
+    * @return either the constant or null
+    */
+   public Constant equatesWithConstant2(String fldname) {
+      if (lhs.isFieldName() &&
+          lhs.asFieldName().equals(fldname) &&
+          extra != null && extra.isConstant()){
+         return extra.asConstant();
+//      }else if (rhs.isFieldName() &&							//this case can never arise
+//               rhs.asFieldName().equals(fldname) &&
+//               lhs.isConstant())
+//         return lhs.asConstant();
+      }else{
+         return null;
+      }
+   }
+   
+   /**
     * Determines if this term is of the form "F1=F2"
     * where F1 is the specified field and F2 is another field.
     * If so, the method returns the name of that field.

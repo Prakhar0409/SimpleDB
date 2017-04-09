@@ -6,6 +6,7 @@ import simpledb.query.*;
 import java.util.Date;
 
 import simpledb.index.Index;
+import simpledb.index.btree.BTreeIndex;
 
 /**
  * The scan class corresponding to the select relational
@@ -15,6 +16,8 @@ import simpledb.index.Index;
 public class IndexSelectScan implements Scan {
    private Index idx;
    private Constant val;
+   private Constant bigger;
+   private boolean between;
    private TableScan ts;
    
    /**
@@ -27,7 +30,26 @@ public class IndexSelectScan implements Scan {
       this.idx = idx;
       this.val = val;
       this.ts  = ts;
+      this.between = false;
+      this.bigger = null;
       beforeFirst();
+   }
+
+   /**
+    * Creates an index select scan for the specified
+    * index and selection constant.
+    * @param idx the index
+    * @param val the smaller constant
+    * @param bigger the bigger constant
+    */
+   public IndexSelectScan(Index idx, Constant val,Constant bigger, TableScan ts) {
+      this.idx = idx;
+      this.val = val;
+      this.bigger = bigger;
+      this.between = true;
+      System.out.println("INITIALIZATION 2 form indexselectscan");
+      this.ts  = ts;
+      beforeFirstBetween();
    }
    
    /**
@@ -37,7 +59,20 @@ public class IndexSelectScan implements Scan {
     * @see simpledb.query.Scan#beforeFirst()
     */
    public void beforeFirst() {
-      idx.beforeFirst(val);
+      idx.beforeFirst(val);			//go to before first smaller value
+   }
+   
+   /**
+    * Positions the scan before the first record,
+    * which in this case means positioning the index
+    * before the first instance of the selection constant.
+    * @see simpledb.query.Scan#beforeFirst()
+    */
+   public void beforeFirstBetween() {
+	   if(bigger == null){
+		   System.out.println("Index Select Scan in between still bigger is null");
+	   }
+      ((BTreeIndex) idx).beforeFirstBetween(val, bigger);		//go to before first smaller value
    }
    
    /**
@@ -50,7 +85,18 @@ public class IndexSelectScan implements Scan {
     * @see simpledb.query.Scan#next()
     */
    public boolean next() {
-      boolean ok = idx.next();
+	  System.out.println("IndexSelectScan: Calls next");
+	  boolean ok = false;
+	  if(between){
+		  //do this for between things else do idx.next
+//		  boolean ok = idx.nextBetween();
+		  System.out.println("QUERY BETWEEN INDEXSCAN POINT 2");
+		  ok = ((BTreeIndex) idx).nextBetween();
+	  }else{
+		  ok = idx.next();
+	  }
+      
+      System.out.println("IndexSelectScan idx: "+ok+"     idx"+idx);
       if (ok) {
          RID rid = idx.getDataRid();
          ts.moveToRid(rid);

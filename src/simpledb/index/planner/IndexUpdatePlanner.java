@@ -48,15 +48,15 @@ public class IndexUpdatePlanner implements UpdatePlanner {
          s.setVal(fldname, val);
          System.out.println("value set--------");
 
-         IndexInfo ii = indexes.get(fldname);
+         IndexInfo ii = indexes.get(fldname);			//IndexInfo<idxname, tblname, fldname, tx>
          int fldtype = p.schema().type(fldname);
          if(fldtype == TIMESTAMP){
         	 val = new TimestampConstant((String)val.asJavaVal());
          }
          //indexing the inserted record
          if (ii != null) {
-            Index idx = ii.open();
-            idx.insert(val, rid);
+            Index idx = ii.open();	//opens a new BTree index on the fieldname and creates the corresponding files in not created already
+            idx.insert(val, rid);	//insert into btree the pointer to rid and val
             idx.close();
          }
       }

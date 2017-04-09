@@ -4,6 +4,7 @@ import simpledb.file.Block;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
 import simpledb.query.Constant;
+import simpledb.query.TimestampConstant;
 
 /**
  * An object that holds the contents of a B-tree leaf block.
@@ -13,6 +14,8 @@ public class BTreeLeaf {
    private TableInfo ti;
    private Transaction tx;
    private Constant searchkey;
+   private Constant searchkeyBigger;
+   private boolean between;
    private BTreePage contents;
    private int currentslot;
    
@@ -29,6 +32,28 @@ public class BTreeLeaf {
       this.ti = ti;
       this.tx = tx;
       this.searchkey = searchkey;
+      this.between = false;
+      this.searchkeyBigger = null;
+      contents = new BTreePage(blk, ti, tx);
+      currentslot = contents.findSlotBefore(searchkey);
+   }
+   
+   /**
+    * Opens a page to hold the specified leaf block.
+    * The page is positioned immediately before the first record
+    * having the specified search key (if any).
+    * @param blk a reference to the disk block
+    * @param ti the metadata of the B-tree leaf file
+    * @param searchkey the <= search key value
+    * @param searchkeyBigger the >= search key value
+    * @param tx the calling transaction
+    */
+   public BTreeLeaf(Block blk, TableInfo ti, Constant searchkey,Constant searchkeyBigger, Transaction tx) {
+      this.ti = ti;
+      this.tx = tx;
+      this.searchkey = searchkey;
+      this.between = true;
+      this.searchkeyBigger = searchkeyBigger;
       contents = new BTreePage(blk, ti, tx);
       currentslot = contents.findSlotBefore(searchkey);
    }
@@ -47,13 +72,44 @@ public class BTreeLeaf {
     * @return false if there are no more leaf records for the search key
     */
    public boolean next() {
-      currentslot++;
-      if (currentslot >= contents.getNumRecs()) 
-         return tryOverflow();
-      else if (contents.getDataVal(currentslot).equals(searchkey))
+	   System.out.println("BTreeLeaf: calls next currentslot: "+currentslot+"     numrecs:"+contents.getNumRecs()+"   searchkey:"+searchkey);
+	   currentslot++;
+      if (currentslot >= contents.getNumRecs()){ 
+    	  System.out.println("BTreeLeaf: try overflow");
+    	  return tryOverflow();
+      }else if (contents.getDataVal(currentslot).equals(searchkey))
          return true;
       else 
          return tryOverflow();
+   }
+   
+   /**
+    * Moves to the next leaf record having the 
+    * previously-specified search key.
+    * Returns false if there is no more such records.
+    * @return false if there are no more leaf records for the search key
+    */
+   public boolean nextBetween() {
+	   System.out.println("BTreeLeaf: calls next currentslot: "+currentslot+"     numrecs:"+contents.getNumRecs()+"   searchkey:"+searchkey+"    bigger:"+searchkeyBigger);
+	   currentslot++;
+	   System.out.println("---------->   current slot:"+contents.getDataVal(currentslot));
+      if (currentslot >= contents.getNumRecs()){ 
+    	  System.out.println("BTreeLeaf: try overflow");
+    	  return tryOverflow();
+      }else if (between(searchkey,searchkeyBigger,contents.getDataVal(currentslot)) )
+         return true;
+      else 
+         return tryOverflow();
+   }
+   
+   public boolean between(Constant smaller,Constant bigger,Constant target){
+	   long targetv = ((TimestampConstant)target).asJavaVal().getTime();
+	   long smallerv = ((TimestampConstant)smaller).asJavaVal().getTime();
+	   long biggerv = (new TimestampConstant((String)bigger.asJavaVal())).asJavaVal().getTime();
+	   if(smallerv <= targetv && targetv<=biggerv){
+		   return true;
+	   }
+	   return false;
    }
    
    /**

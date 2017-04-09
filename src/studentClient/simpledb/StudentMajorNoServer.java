@@ -118,6 +118,26 @@ public class StudentMajorNoServer {
 			
 			
 			
+			Transaction tx5 = new Transaction();
+			String qry5 = "select id,name,dob from man1 where dob between '2011-10-08 20:00:00' '2011-10-10 22:00:00';";
+			Plan p5 = SimpleDB.planner().createQueryPlan(qry5, tx5);			//this is ProjectPlan
+		
+			
+			Scan s5 = p5.open();
+			System.out.println("-------------Printing out the fields");
+			((ProjectScan) s5).printFields();
+				
+			System.out.println("Id\tName\tDob");
+			while (s5.next()) {
+				int sid = s5.getInt("id"); //SimpleDB stores field names
+				String dname = s5.getString("name"); //in lower case
+				Date dob = s5.getTimestamp("dob"); //in lower case
+				System.out.println(sid + "\t" + dname+ "\t"+dob);
+			}
+			s5.close();
+			tx5.commit();
+			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			
 			
 			
 		}

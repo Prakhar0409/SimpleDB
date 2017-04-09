@@ -31,10 +31,10 @@ class TablePlanner {
     * @param tx the calling transaction
     */
    public TablePlanner(String tblname, Predicate mypred, Transaction tx) {
-      this.mypred  = mypred;
+      this.mypred  = mypred;								//all predicates
       this.tx  = tx;
-      myplan   = new TablePlan(tblname, tx);
-      myschema = myplan.schema();
+      myplan   = new TablePlan(tblname, tx);				//TablePlan(TableInfo,StatInfo,tx)
+      myschema = myplan.schema();							//get schema for that table
       indexes  = SimpleDB.mdMgr().getIndexInfo(tblname, tx); //indexes(fldname,IndexInfo<idxname, tblname, fldname, tx>)
    }
    
@@ -84,6 +84,12 @@ class TablePlanner {
    private Plan makeIndexSelect() {
       for (String fldname : indexes.keySet()) {
          Constant val = mypred.equatesWithConstant(fldname);
+         Constant val2 = mypred.equatesWithConstant2(fldname);
+         if(val2 != null){
+        	 //between query
+        	 IndexInfo ii = indexes.get(fldname);
+        	 return new IndexSelectPlan(myplan, ii, val, val2, tx);
+         }
          if (val != null) {
             IndexInfo ii = indexes.get(fldname);
             return new IndexSelectPlan(myplan, ii, val, tx);

@@ -85,6 +85,29 @@ public class BTreeIndex implements Index {
       Block leafblk = new Block(leafTi.fileName(), blknum);
       leaf = new BTreeLeaf(leafblk, leafTi, searchkey, tx);
    }
+   
+   /**
+    * Traverses the directory to find the leaf block corresponding
+    * to the specified search key.
+    * The method then opens a page for that leaf block, and
+    * positions the page before the first record (if any)
+    * having that search key.
+    * The leaf page is kept open, for use by the methods next
+    * and getDataRid.
+    * @see simpledb.index.Index#beforeFirst(simpledb.query.Constant)
+    */
+   public void beforeFirstBetween(Constant searchkey,Constant searchkeyBigger) {
+      close();
+      BTreeDir root = new BTreeDir(rootblk, dirTi, tx);
+      int blknum = root.search(searchkey);
+      root.close();
+      Block leafblk = new Block(leafTi.fileName(), blknum);
+      System.out.println("YOYOYOYOYOY MAN");
+      if(searchkeyBigger == null){
+    	  System.out.println("NULLLLLL");
+      }
+      leaf = new BTreeLeaf(leafblk, leafTi, searchkey,searchkeyBigger, tx);
+   }
 
    /**
     * Moves to the next leaf record having the
@@ -93,7 +116,19 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#next()
     */
    public boolean next() {
+	   System.out.println("BTreeIndex: calls next");
       return leaf.next();
+   }
+   
+   /**
+    * Moves to the next leaf record having the
+    * previously-specified search key between required values.
+    * Returns false if there are no more such leaf records.
+    * @see simpledb.index.Index#next()
+    */
+   public boolean nextBetween() {
+	   System.out.println("BTreeIndex: calls NEXT-BETWEEN");
+      return leaf.nextBetween();
    }
 
    /**

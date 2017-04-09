@@ -119,6 +119,24 @@ public class Predicate {
    }
    
    /**
+    * Determines if there is a term of the form not of form "F=c" 
+    * but of form "F between c1 and c2" 
+    * where F is the specified field and c1,c2 are some constants.
+    * If so, the method returns that c2.
+    * If not, the method returns null.
+    * @param fldname the name of the field
+    * @return either the constant or null
+    */
+   public Constant equatesWithConstant2(String fldname) {
+      for (Term t : terms) {
+         Constant c = t.equatesWithConstant2(fldname);
+         if (c != null)
+            return c;
+      }
+      return null;
+   }
+   
+   /**
     * Determines if there is a term of the form "F1=F2"
     * where F1 is the specified field and F2 is another field.
     * If so, the method returns the name of that field.

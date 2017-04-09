@@ -38,6 +38,7 @@ public class TableScan implements UpdateScan {
    }
    
    public boolean next() {
+	   System.out.println("TableScan: Calls next");
       return rf.next();
    }
    
