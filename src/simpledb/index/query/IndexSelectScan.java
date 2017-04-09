@@ -153,4 +153,8 @@ public class IndexSelectScan implements Scan {
    public boolean hasField(String fldname) {
       return ts.hasField(fldname);
    }
+   
+   public int fieldType(String fldname) {
+      return ts.fieldType(fldname);
+   }
 }

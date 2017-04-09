@@ -74,6 +74,10 @@ public class ProjectScan implements Scan {
       return fieldlist.contains(fldname);
    }
    
+   public int fieldType(String fldname) {
+      return s.fieldType(fldname);
+   }
+   
    /**
     * Print all field names
     */

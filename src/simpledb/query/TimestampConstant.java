@@ -11,6 +11,7 @@ import java.util.Date;
  */
 public class TimestampConstant implements Constant {
    private Date val;
+   private boolean invalid;
    
    /**
     * Create a constant by wrapping the specified string.
@@ -18,6 +19,7 @@ public class TimestampConstant implements Constant {
     */
    public TimestampConstant(Date s) {
       val = s;
+      invalid = false;
    }
    
    /**
@@ -29,12 +31,18 @@ public class TimestampConstant implements Constant {
 	   tmp.setLenient(false);
       try {
     	 val = tmp.parse(s);
-	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		//		e.printStackTrace();		
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> InvalidDateFormatError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-	}
-	  
+    	 invalid = false;
+      } catch (ParseException e) {
+		 // TODO Auto-generated catch block
+		 //		e.printStackTrace();
+    	  invalid = true;
+	 	 System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> SERVER: InvalidDateFormatError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+	 	 throw new InvalidDateFormatError();
+      }  
+   }
+   
+   public boolean isInvalid(){
+	   return (invalid==true);
    }
   
    

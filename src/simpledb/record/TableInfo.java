@@ -13,6 +13,7 @@ public class TableInfo {
    private Map<String,Integer> offsets;
    private int recordlen;
    private String tblname;
+   private int numRecs;			//not used for now
    
    /**
     * Creates a TableInfo object, given a table name
@@ -33,6 +34,7 @@ public class TableInfo {
          offsets.put(fldname, pos);				//store the information which fieldname was stored at what position
          pos += len;			//increment by number of bytes it takes to save the field name
       }
+      numRecs = 0;
       recordlen = pos;
    }
    
@@ -51,6 +53,7 @@ public class TableInfo {
       this.schema    = schema;
       this.offsets   = offsets;
       this.recordlen = recordlen;
+      this.numRecs = 0;
    }
    
    /**
@@ -69,6 +72,14 @@ public class TableInfo {
     */
    public Schema schema() {
       return schema;
+   }
+   
+   /**
+    * Returns the number of entries in the table of the table's records
+    * @return the num of records in the table
+    */
+   public int numRecords() {
+      return numRecs;
    }
    
    /**

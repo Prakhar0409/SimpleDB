@@ -112,6 +112,13 @@ public class IndexJoinScan implements Scan {
          return s.getString(fldname);
    }
    
+   public int fieldType(String fldname) {
+      if(ts.hasField(fldname)){
+	   return ts.fieldType(fldname);
+      }
+      return s.fieldType(fldname);
+   }
+   
    /**
     * Returns the timestamp value of the specified field.
     * @see simpledb.query.Scan#getVal(java.lang.String)

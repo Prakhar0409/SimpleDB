@@ -57,6 +57,11 @@ public class SQLInterpreter {
 		    										//private Scan s;
 		    										//private Schema sch;
 		    										//private RemoteConnectionImpl rconn
+		    if(rs == null){
+		    	//InvalidIntervalError
+		    	System.out.println("InvalidIntervalError");
+		    	return;
+		    }
 		    ResultSetMetaData md = rs.getMetaData();
 		    int numcols = md.getColumnCount();
 		    int totalwidth = 0;
@@ -85,7 +90,8 @@ public class SQLInterpreter {
 						System.out.format(fmt + "d", rs.getInt(fldname));
 					else if(fldtype == Types.TIMESTAMP){
 						SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						System.out.format(fmt + "s", ts.format(rs.getTimestamp(fldname)));
+						System.out.format(fmt + "s", ts.format(rs.getDate(fldname)));
+//						System.out.format(fmt + "s", rs.getDate(fldname).to);
 					}else
 						System.out.format(fmt + "s", rs.getString(fldname));
 				}
@@ -103,7 +109,15 @@ public class SQLInterpreter {
 		try {
 		    Statement stmt = conn.createStatement();
 		    int howmany = stmt.executeUpdate(cmd);
-		    System.out.println(howmany + " records processed");
+		    if(howmany == -1){
+		    	System.out.println("MemoryError");
+		    }else if(howmany == -2){
+		    	System.out.println("InvalidDateFormatError");
+		    }else if(howmany == -3){
+		    	System.out.println("InvalidIntervalError");
+		    }else{
+		    	System.out.println(howmany + " records processed");
+		    }
 		}
 		catch (SQLException e) {
 			System.out.println("SQL Exception: " + e.getMessage());

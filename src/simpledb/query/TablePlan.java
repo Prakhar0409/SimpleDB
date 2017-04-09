@@ -69,4 +69,12 @@ public class TablePlan implements Plan {
    public Schema schema() {
       return ti.schema();
    }
+   
+   /**
+    * Gets tableinfo for the table
+    * @returns tableinfo
+    */
+   public TableInfo getTableInfo() {
+      return ti;
+   }
 }

@@ -140,5 +140,11 @@ public class GroupByScan implements Scan {
          return true;
       return false;
    }
+   
+   
+   public int fieldType(String fldname) {
+	  System.out.println("GroupByScan.java: NOT SURE ABOUT THIS - returning fieldtype");
+      return s.fieldType(fldname);
+   }
 }
 

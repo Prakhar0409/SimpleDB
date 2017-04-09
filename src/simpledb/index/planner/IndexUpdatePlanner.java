@@ -32,26 +32,40 @@ public class IndexUpdatePlanner implements UpdatePlanner {
       // first, insert the record								//actually a TableScan casted to UpdateScan
       UpdateScan s = (UpdateScan) p.open();						// Opens a scan corresponding to this plan.
       															// The scan will be positioned before its first record.
+      
+      StatInfo si = SimpleDB.mdMgr().calcTableStats(tblname, tx);	//count number of records just before the insert
+      //StatInfo getStatInfo(String tblname, TableInfo ti, Transaction tx)
+	  
+      System.out.println("NUM RECORDS (before insertion): "+si.recordsOutput());
+      if(si.recordsOutput() >= 2){
+    	  System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> SERVER: MemoryError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    	  return -1;
+      }
       s.insert();												//Inserts a new record somewhere in the scan.
       RID rid = s.getRid();										//gets the RID of the current record.
       
       
-      // then modify each field, inserting an index record if appropriate
-      
-    //indexes(fldname,IndexInfo<idxname, tblname, fldname, tx>)
+      //then modify each field, inserting an index record if appropriate
+      //indexes(fldname,IndexInfo<idxname, tblname, fldname, tx>)
       Map<String,IndexInfo> indexes = SimpleDB.mdMgr().getIndexInfo(tblname, tx);	
       Iterator<Constant> valIter = data.vals().iterator();
       for (String fldname : data.fields()) {
          Constant val = valIter.next();
+         
+         int fldtype = p.schema().type(fldname);
+         if(fldtype == TIMESTAMP){				//converting string constant to timestamp constant if required 
+        	 val = new TimestampConstant((String)val.asJavaVal());
+        	 if(((TimestampConstant)val).isInvalid()){
+        		return -2;			//-2 for InvalidDateFormatError 
+        	 }
+         }
+         
          System.out.println("Modify field " + fldname + " to val " + val);
          s.setVal(fldname, val);
-         System.out.println("value set--------");
-
+      
+         //updating indexes
          IndexInfo ii = indexes.get(fldname);			//IndexInfo<idxname, tblname, fldname, tx>
-         int fldtype = p.schema().type(fldname);
-         if(fldtype == TIMESTAMP){
-        	 val = new TimestampConstant((String)val.asJavaVal());
-         }
+         
          //indexing the inserted record
          if (ii != null) {
             Index idx = ii.open();	//opens a new BTree index on the fieldname and creates the corresponding files in not created already

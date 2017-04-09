@@ -52,6 +52,7 @@ public class Transaction {
       concurMgr.release();
       myBuffers.unpinAll();
       System.out.println("transaction " + txnum + " committed");
+      System.out.println("========================================================================");
    }
    
    /**
@@ -66,6 +67,7 @@ public class Transaction {
       concurMgr.release();
       myBuffers.unpinAll();
       System.out.println("transaction " + txnum + " rolled back");
+      System.out.println("========================================================================");
    }
    
    /**

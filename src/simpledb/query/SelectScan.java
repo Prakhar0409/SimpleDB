@@ -73,6 +73,10 @@ public class SelectScan implements UpdateScan {
       return s.hasField(fldname);
    }
    
+   public int fieldType(String fldname) {
+      return s.fieldType(fldname);
+   }
+   
    // UpdateScan methods
    
    public void setVal(String fldname, Constant val) {

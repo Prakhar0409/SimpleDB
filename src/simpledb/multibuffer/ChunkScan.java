@@ -111,6 +111,10 @@ public class ChunkScan implements Scan {
       return sch.hasField(fldname);
    }
    
+   public int fieldType(String fldname) {
+      return sch.type(fldname);
+   }
+   
    private void moveToBlock(int blknum) {
       current = blknum;
       rp = pages.get(current - startbnum);

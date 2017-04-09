@@ -1,6 +1,7 @@
 package simpledb.parse;
 
 import java.util.*;
+
 import simpledb.query.*;
 import simpledb.record.Schema;
 
@@ -53,7 +54,7 @@ public class Parser {
     	  long big = (new TimestampConstant ( (String)extra.asConstant().asJavaVal())).asJavaVal().getTime();
     	  if(big<small){
     		  System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> InvalidIntervalError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    		  return null;
+    		  throw new InvalidIntervalError();
     	  }else{
     		  return new Term(lhs, rhs, extra);
     	  }
@@ -66,10 +67,20 @@ public class Parser {
    }
    
    public Predicate predicate() {
-      Predicate pred = new Predicate(term());
+	  Term t = term();
+	  if(t==null){
+		  //invalidIntervalError
+		  return null;
+	  }
+      Predicate pred = new Predicate(t);
       if (lex.matchKeyword("and")) {
          lex.eatKeyword("and");
-         pred.conjoinWith(predicate());
+         Predicate p = predicate();
+         if(p==null){
+        	 //invalidIntervalError
+        	 return null;
+         }
+         pred.conjoinWith(p);
       }
       return pred;
    }
@@ -85,8 +96,12 @@ public class Parser {
       if (lex.matchKeyword("where")) {
          lex.eatKeyword("where");
          pred = predicate();
+         if(pred == null){
+        	 //invalid Interval Error
+        	 return new QueryData(fields, tables, null);
+         }
       }
-      return new QueryData(fields, tables, pred);
+      return new QueryData(fields, tables, pred);			//predicate is never null, it can be empty but not null
    }
    
    private Collection<String> selectList() {

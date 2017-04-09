@@ -30,6 +30,10 @@ class RemoteStatementImpl extends UnicastRemoteObject implements RemoteStatement
       try {
          Transaction tx = rconn.getTransaction();
          Plan pln = SimpleDB.planner().createQueryPlan(qry, tx);
+         if(pln == null){
+        	 //invalidInterval error
+        	 return null;
+         }
          return new RemoteResultSetImpl(pln, rconn);
       }
       catch(RuntimeException e) {

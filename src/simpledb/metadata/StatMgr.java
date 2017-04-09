@@ -61,7 +61,7 @@ class StatMgr {
       tcatfile.close();
    }
    
-   private synchronized StatInfo calcTableStats(TableInfo ti, Transaction tx) {
+   public synchronized StatInfo calcTableStats(TableInfo ti, Transaction tx) {
       int numRecs = 0;
       RecordFile rf = new RecordFile(ti, tx);
       int numblocks = 0;

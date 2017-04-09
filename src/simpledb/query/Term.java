@@ -1,6 +1,7 @@
 package simpledb.query;
 
 import simpledb.record.Schema;
+import static java.sql.Types.*;
 
 /**
  * A term is a comparison between two expressions.
@@ -147,17 +148,34 @@ public class Term {
     * @return true if both expressions have the same value in the scan
     */
    public boolean isSatisfied(Scan s) {
-	  if(extra!=null){
-		  // meaning timestamp between was used
-//		  Long mainval = lhs.eval
-		  System.out.println("BITCH I AM COMING!");
-		  TimestampConstant mainval = new TimestampConstant((String)lhs.evaluate(s).asJavaVal());
-		  System.out.println("GAME!");
-		  TimestampConstant smallval = new TimestampConstant((String)rhs.evaluate(s).asJavaVal());
-		  TimestampConstant bigval = new TimestampConstant((String)extra.evaluate(s).asJavaVal());
+	  if(extra!=null){			// means timestamp between was used
 		  
+		  System.out.println("BITCH I AM COMING!");
+		  Constant lhsval = lhs.evaluate(s);
+		  Constant rhsval = rhs.evaluate(s);
+		  Constant extraval = extra.evaluate(s);
+		  
+		  TimestampConstant mainval, smallval,bigval;
+		  if(lhsval instanceof TimestampConstant){
+			  mainval = (TimestampConstant)lhsval;
+		  }else{
+			  mainval = new TimestampConstant((String) lhsval.asJavaVal());
+		  }
+		  
+		  if(rhsval instanceof TimestampConstant){
+			  smallval = (TimestampConstant)rhsval;
+		  }else{
+			  smallval = new TimestampConstant((String)rhsval.asJavaVal());
+		  }
+		  
+		  if(extraval instanceof TimestampConstant){
+			  bigval = (TimestampConstant)extraval;
+		  }else{
+			  bigval = new TimestampConstant((String)extraval.asJavaVal());
+		  }
+		  
+		  System.out.println("YO MAN WAIT HERE FIRST!");
 		  long mvv = mainval.asJavaVal().getTime();
-		  System.out.println("Fuck you!");
 		  long sv = smallval.asJavaVal().getTime();
 		  long bv = bigval.asJavaVal().getTime();
 		  if(sv<= mvv && mvv<=bv){
@@ -166,8 +184,21 @@ public class Term {
 			  return false;
 		  }
 	  }
-      Constant lhsval = lhs.evaluate(s);
+	  
+	  Constant lhsval = lhs.evaluate(s);
       Constant rhsval = rhs.evaluate(s);
+      
+      System.out.println("Babes see this: lhs="+lhsval.asJavaVal() +"      rhs="+rhsval.asJavaVal());
+      
+      if(lhsval instanceof TimestampConstant && !(rhsval instanceof TimestampConstant)){	
+    	  //if one is timestampConstant then other should also have been
+    	  System.out.println("BENEFITTED11111");
+    	  rhsval = new TimestampConstant((String)rhsval.asJavaVal());
+      }else if(rhsval instanceof TimestampConstant && !(lhsval instanceof TimestampConstant)){
+    	  System.out.println("BENEFITTED2222222");
+    	  lhsval = new TimestampConstant((String)lhsval.asJavaVal());
+      }
+	  
       return rhsval.equals(lhsval);
    }
    

@@ -149,5 +149,12 @@ public class MergeJoinScan implements Scan {
    public boolean hasField(String fldname) {
       return s1.hasField(fldname) || s2.hasField(fldname);
    }
+   
+   public int fieldType(String fldname) {
+      if(s1.hasField(fldname)){
+	   return s1.fieldType(fldname);
+      }
+      return s2.fieldType(fldname);
+   }
 }
 

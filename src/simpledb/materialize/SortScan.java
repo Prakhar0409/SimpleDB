@@ -136,6 +136,10 @@ public class SortScan implements Scan {
       return currentscan.hasField(fldname);
    }
    
+   public int fieldType(String fldname) {
+      return currentscan.fieldType(fldname);
+   }
+   
    /**
     * Saves the position of the current record,
     * so that it can be restored at a later time.
@@ -156,4 +160,5 @@ public class SortScan implements Scan {
       if (rid2 != null)
          s2.moveToRid(rid2);
    }
+   
 }

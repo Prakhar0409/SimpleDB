@@ -46,6 +46,8 @@ public class HeuristicQueryPlanner implements QueryPlanner {
             currentplan = getLowestProductPlan(currentplan);
       }
       
+      //below projectPlan contains selectPlan contains tablePlan
+      
       // Step 4.  Project on the field names and return
       return new ProjectPlan(currentplan, data.fields());
    }

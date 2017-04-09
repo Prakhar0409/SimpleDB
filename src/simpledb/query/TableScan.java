@@ -52,17 +52,20 @@ public class TableScan implements UpdateScan {
     * If INTEGER, then the record file's getInt method is called;
     * otherwise, the getString method is called.
     * @see simpledb.query.Scan#getVal(java.lang.String)
-    */
+    */    	  //will be used to compare expression from the term in a predicate
    public Constant getVal(String fldname) {
       if (sch.type(fldname) == INTEGER){
          return new IntConstant(rf.getInt(fldname));
       }else if(sch.type(fldname) == TIMESTAMP){
+    	  											//converting retrieved timestamp to string
     	  SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	  String tp = ts.format(rf.getTimestamp(fldname)).toString();
-    	  System.out.println("String value: "+tp);
-//    	  return new TimestampConstant(rf.getTimestamp(fldname));
-    	  return new StringConstant(tp);  
-      }else if(sch.type(fldname) == VARCHAR || sch.type(fldname) == TIMESTAMP){
+    	  System.out.println("HEHEHEHE  String (timestamp) value: "+tp);
+//    	  return new StringConstant(tp);
+    	  TimestampConstant tc = new TimestampConstant(ts.format(rf.getTimestamp(fldname)));
+    	  System.out.println("HOHOHOHOOH: ");
+    	  return tc;
+      }else if(sch.type(fldname) == VARCHAR ){
     	  System.out.println("String value: "+rf.getString(fldname));
     	  return new StringConstant(rf.getString(fldname));  
       }else{
@@ -87,6 +90,10 @@ public class TableScan implements UpdateScan {
       return sch.hasField(fldname);
    }
    
+   public int  fieldType(String fldname){
+	   return sch.type(fldname);
+   }
+   
    // UpdateScan methods
    
    /**
@@ -97,18 +104,17 @@ public class TableScan implements UpdateScan {
     * @see simpledb.query.UpdateScan#setVal(java.lang.String, simpledb.query.Constant)
     */ 
    public void setVal(String fldname, Constant val) {
-	   System.out.println("look herere bro: "+sch.type(fldname));
       if (sch.type(fldname) == INTEGER){
-    	  System.out.println("INTEGER");
+    	 System.out.println("TableScan: INTEGER to INTEGER CONSTANT");
          rf.setInt(fldname, (Integer)val.asJavaVal());
       }else if(sch.type(fldname) == VARCHAR){
-    	 System.out.println("STRINGCONST TO STRINGCONST");
+    	 System.out.println("TableScan: STRING TO STRINGCONST");
     	 rf.setString(fldname, (String)val.asJavaVal());
       }else if(sch.type(fldname) == TIMESTAMP){
-    	  System.out.println("TableScan: converting STRINGCONST to TIMESTAMPCONST");
-		  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
-		  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		//todo
-	 
+    	  System.out.println("TableScan: converting STRING to TIMESTAMPCONST - done in the indexUpdatePlan");
+//		  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
+//		  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		
+    	  rf.setTimestamp(fldname, (Date)val.asJavaVal());
       }
    }
    

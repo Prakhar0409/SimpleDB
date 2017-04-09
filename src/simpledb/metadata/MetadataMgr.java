@@ -17,6 +17,10 @@ public class MetadataMgr {
       idxmgr  = new IndexMgr(isnew, tblmgr, tx);
    }
    
+   public StatInfo calcTableStats(String tblname,Transaction tx){
+	   return statmgr.calcTableStats(tblmgr.getTableInfo(tblname, tx), tx);
+   }
+   
    public void createTable(String tblname, Schema sch, Transaction tx) {
       tblmgr.createTable(tblname, sch, tx);
    }

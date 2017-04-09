@@ -34,6 +34,7 @@ public class TableMgr {
       Schema tcatSchema = new Schema();
       tcatSchema.addStringField("tblname", MAX_NAME);
       tcatSchema.addIntField("reclength");
+//      tcatSchema.addIntField("numRecs");
       tcatInfo = new TableInfo("tblcat", tcatSchema);
       
       Schema fcatSchema = new Schema();
@@ -63,6 +64,7 @@ public class TableMgr {
       tcatfile.insert();
       tcatfile.setString("tblname", tblname);
       tcatfile.setInt("reclength", ti.recordLength());
+//      tcatfile.setInt("numRecs", 0);
       tcatfile.close();
       
       // insert a record into fldcat for each field
@@ -88,9 +90,11 @@ public class TableMgr {
    public TableInfo getTableInfo(String tblname, Transaction tx) {
       RecordFile tcatfile = new RecordFile(tcatInfo, tx);
       int reclen = -1;
+      int numRecs = -1;
       while (tcatfile.next())
          if(tcatfile.getString("tblname").equals(tblname)) {
          reclen = tcatfile.getInt("reclength");
+//         numRecs = tcatfile.getInt("numRecs");
          break;
       }
       tcatfile.close();

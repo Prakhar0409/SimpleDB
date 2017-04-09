@@ -27,13 +27,14 @@ public class Planner {
     * @return the scan corresponding to the query plan
     */
    public Plan createQueryPlan(String qry, Transaction tx) {
-	  System.out.println("Creating query plan");
 	  Parser parser = new Parser(qry);		//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
-      System.out.println("query tokenised successfully");
       QueryData data = parser.query();		//returns QueryData-- note select conditions on timestamp fields are still stringConstants
       										//QueryData(collection<string> fields, collection<string> tables, predicate)
       										//Predicate(List<Terms>), Term(Expression lhs, Expression rhs)
-      System.out.println("got the query data");
+      if(data.pred() == null){
+    	  //invalidIntervalError
+    	  return null;
+      }
       return qplanner.createPlan(data, tx);
    }
    
@@ -54,16 +55,7 @@ public class Planner {
       													// - insert => InsertData(tblname-string,flds-List<sting>,vals<Constant>)
       													// - create index=> IndexData(indexname,tablename,fieldname)
       if (obj instanceof InsertData){
-    	  System.out.println("*********Inserting into table***********");
-    	  InsertData t = (InsertData) obj;
-    	  System.out.println("TABLE NAME: "+t.tableName());
-    	  List<String> flds = t.fields();
-    	  List<Constant> vals = t.vals();
-    	  for(int i=0;i< flds.size();i++){
-    		  System.out.println(flds.get(i) + " -- "+vals.get(i).getClass().getName());
-    	  }
-    	  int ret = uplanner.executeInsert((InsertData)obj, tx);		//gets IndexQueryPlanner and calls function
-    	  return ret;
+    	  return uplanner.executeInsert((InsertData)obj, tx);		//gets IndexQueryPlanner and calls function
    	  }else if (obj instanceof DeleteData)
          return uplanner.executeDelete((DeleteData)obj, tx);
       else if (obj instanceof ModifyData)
