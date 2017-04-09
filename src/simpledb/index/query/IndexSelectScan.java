@@ -85,18 +85,14 @@ public class IndexSelectScan implements Scan {
     * @see simpledb.query.Scan#next()
     */
    public boolean next() {
-	  System.out.println("IndexSelectScan: Calls next");
 	  boolean ok = false;
 	  if(between){
-		  //do this for between things else do idx.next
-//		  boolean ok = idx.nextBetween();
-		  System.out.println("QUERY BETWEEN INDEXSCAN POINT 2");
+		  //do this for between queries else do idx.next
 		  ok = ((BTreeIndex) idx).nextBetween();
 	  }else{
 		  ok = idx.next();
 	  }
-      
-      System.out.println("IndexSelectScan idx: "+ok+"     idx"+idx);
+	  
       if (ok) {
          RID rid = idx.getDataRid();
          ts.moveToRid(rid);

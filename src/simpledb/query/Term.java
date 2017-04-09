@@ -1,7 +1,6 @@
 package simpledb.query;
 
 import simpledb.record.Schema;
-import static java.sql.Types.*;
 
 /**
  * A term is a comparison between two expressions.
@@ -149,8 +148,6 @@ public class Term {
     */
    public boolean isSatisfied(Scan s) {
 	  if(extra!=null){			// means timestamp between was used
-		  
-		  System.out.println("BITCH I AM COMING!");
 		  Constant lhsval = lhs.evaluate(s);
 		  Constant rhsval = rhs.evaluate(s);
 		  Constant extraval = extra.evaluate(s);
@@ -174,7 +171,6 @@ public class Term {
 			  bigval = new TimestampConstant((String)extraval.asJavaVal());
 		  }
 		  
-		  System.out.println("YO MAN WAIT HERE FIRST!");
 		  long mvv = mainval.asJavaVal().getTime();
 		  long sv = smallval.asJavaVal().getTime();
 		  long bv = bigval.asJavaVal().getTime();
@@ -188,14 +184,12 @@ public class Term {
 	  Constant lhsval = lhs.evaluate(s);
       Constant rhsval = rhs.evaluate(s);
       
-      System.out.println("Babes see this: lhs="+lhsval.asJavaVal() +"      rhs="+rhsval.asJavaVal());
+//      System.out.println("Comparing this: lhs="+lhsval.asJavaVal() +"      rhs="+rhsval.asJavaVal());
       
       if(lhsval instanceof TimestampConstant && !(rhsval instanceof TimestampConstant)){	
     	  //if one is timestampConstant then other should also have been
-    	  System.out.println("BENEFITTED11111");
     	  rhsval = new TimestampConstant((String)rhsval.asJavaVal());
       }else if(rhsval instanceof TimestampConstant && !(lhsval instanceof TimestampConstant)){
-    	  System.out.println("BENEFITTED2222222");
     	  lhsval = new TimestampConstant((String)lhsval.asJavaVal());
       }
 	  

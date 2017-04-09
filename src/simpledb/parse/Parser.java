@@ -68,19 +68,10 @@ public class Parser {
    
    public Predicate predicate() {
 	  Term t = term();
-	  if(t==null){
-		  //invalidIntervalError
-		  return null;
-	  }
       Predicate pred = new Predicate(t);
       if (lex.matchKeyword("and")) {
          lex.eatKeyword("and");
-         Predicate p = predicate();
-         if(p==null){
-        	 //invalidIntervalError
-        	 return null;
-         }
-         pred.conjoinWith(p);
+         pred.conjoinWith(predicate());
       }
       return pred;
    }
@@ -96,12 +87,8 @@ public class Parser {
       if (lex.matchKeyword("where")) {
          lex.eatKeyword("where");
          pred = predicate();
-         if(pred == null){
-        	 //invalid Interval Error
-        	 return new QueryData(fields, tables, null);
-         }
       }
-      return new QueryData(fields, tables, pred);			//predicate is never null, it can be empty but not null
+      return new QueryData(fields, tables, pred);	
    }
    
    private Collection<String> selectList() {

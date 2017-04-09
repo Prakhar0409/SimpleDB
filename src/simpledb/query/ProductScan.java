@@ -43,7 +43,6 @@ public class ProductScan implements Scan {
     * @see simpledb.query.Scan#next()
     */
    public boolean next() {
-	   System.out.println("ProductScan: Calls next");
       if (s2.next())
          return true;
       else {

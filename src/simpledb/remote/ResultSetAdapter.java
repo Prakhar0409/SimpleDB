@@ -319,6 +319,10 @@ public abstract class ResultSetAdapter implements ResultSet {
       throw new SQLException("operation not implemented");
    }
    
+   public java.util.Date getTimestampP2(int columnIndex) throws SQLException {
+      throw new SQLException("operation not implemented");
+   }
+   
    public Timestamp getTimestamp(String columnLabel) throws SQLException {
       throw new SQLException("operation not implemented");
    }

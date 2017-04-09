@@ -38,7 +38,6 @@ public class TableScan implements UpdateScan {
    }
    
    public boolean next() {
-	   System.out.println("TableScan: Calls next");
       return rf.next();
    }
    
@@ -105,13 +104,13 @@ public class TableScan implements UpdateScan {
     */ 
    public void setVal(String fldname, Constant val) {
       if (sch.type(fldname) == INTEGER){
-    	 System.out.println("TableScan: INTEGER to INTEGER CONSTANT");
+//    	 System.out.println("TableScan: INTEGER to INTEGER CONSTANT");
          rf.setInt(fldname, (Integer)val.asJavaVal());
       }else if(sch.type(fldname) == VARCHAR){
-    	 System.out.println("TableScan: STRING TO STRINGCONST");
+//    	 System.out.println("TableScan: STRING TO STRINGCONST");
     	 rf.setString(fldname, (String)val.asJavaVal());
       }else if(sch.type(fldname) == TIMESTAMP){
-    	  System.out.println("TableScan: converting STRING to TIMESTAMPCONST - done in the indexUpdatePlan");
+//    	  System.out.println("TableScan: converting STRING to TIMESTAMPCONST - done in the indexUpdatePlan");
 //		  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
 //		  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		
     	  rf.setTimestamp(fldname, (Date)val.asJavaVal());

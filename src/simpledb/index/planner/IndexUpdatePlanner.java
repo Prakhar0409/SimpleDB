@@ -56,9 +56,6 @@ public class IndexUpdatePlanner implements UpdatePlanner {
          int fldtype = p.schema().type(fldname);
          if(fldtype == TIMESTAMP){				//converting string constant to timestamp constant if required 
         	 val = new TimestampConstant((String)val.asJavaVal());
-        	 if(((TimestampConstant)val).isInvalid()){
-        		return -2;			//-2 for InvalidDateFormatError 
-        	 }
          }
          
          System.out.println("Modify field " + fldname + " to val " + val);
@@ -145,7 +142,6 @@ public class IndexUpdatePlanner implements UpdatePlanner {
    
    public int executeCreateIndex(CreateIndexData data, Transaction tx) {
 	   //creating index  - does not index currently present entries. only indexes the newer entries with insert
-	   System.out.println("Just to confirm bro");
       SimpleDB.mdMgr().createIndex(data.indexName(), data.tableName(), data.fieldName(), tx);
       return 0;
    }

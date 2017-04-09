@@ -29,7 +29,6 @@ public class ProjectScan implements Scan {
    }
    
    public boolean next() {
-	   System.out.println("ProjectScan: Calls next");
       return s.next();
    }
    

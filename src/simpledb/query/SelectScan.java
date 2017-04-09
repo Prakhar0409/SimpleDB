@@ -40,11 +40,11 @@ public class SelectScan implements UpdateScan {
     * @see simpledb.query.Scan#next()
     */
    public boolean next() {
-	   System.out.println("SelectScan: Calls next");
-//	   IndexSelectScan iss = (IndexSelectScan) s;
-      while (s.next())
-         if (pred.isSatisfied(s))
-         return true;
+      while (s.next()){
+         if (pred.isSatisfied(s)){
+        	 return true;
+         }
+      }
       return false;
    }
    
@@ -53,7 +53,8 @@ public class SelectScan implements UpdateScan {
    }
    
    public Constant getVal(String fldname) {
-      return s.getVal(fldname);
+      System.out.println("SelectScan getval called");
+	  return s.getVal(fldname);
    }
    
    public int getInt(String fldname) {

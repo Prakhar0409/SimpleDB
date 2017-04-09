@@ -7,6 +7,8 @@ import simpledb.query.Scan;
 import simpledb.record.Schema;
 import simpledb.remote.RemoteResultSet;
 import simpledb.remote.SimpleDriver;
+import simpledb.remote.SimpleResultSet;
+
 import java.io.*;
 
 
@@ -90,7 +92,9 @@ public class SQLInterpreter {
 						System.out.format(fmt + "d", rs.getInt(fldname));
 					else if(fldtype == Types.TIMESTAMP){
 						SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						System.out.format(fmt + "s", ts.format(rs.getDate(fldname)));
+						java.util.Date d = ((SimpleResultSet)rs).getTimestampP2(fldname);
+						System.out.format(fmt + "s", ts.format(d));
+
 //						System.out.format(fmt + "s", rs.getDate(fldname).to);
 					}else
 						System.out.format(fmt + "s", rs.getString(fldname));

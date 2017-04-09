@@ -43,11 +43,20 @@ public class SimpleResultSet extends ResultSetAdapter {
       }
    }
    
+   
+   //rrs.getTimestamp returns java.util.Date
    public Timestamp getTimestamp(String fldname) throws SQLException {
       try {
-//    	  Timestamp tc = rrs.getTimestamp(fldname);
-//    	  SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//    	  ts.format(tc);
+         return new Timestamp(rrs.getTimestamp(fldname).getTime());
+      }
+      catch (Exception e) {
+         throw new SQLException(e);
+      }
+   }
+   
+   //rrs.getTimestamp returns java.util.Date
+   public java.util.Date getTimestampP2(String fldname) throws SQLException {
+      try {
          return rrs.getTimestamp(fldname);
       }
       catch (Exception e) {
@@ -55,6 +64,7 @@ public class SimpleResultSet extends ResultSetAdapter {
       }
    }
    
+   //rrs.getTimestamp returns java.util.Date
    public Date getDate(String fldname) throws SQLException {
 	      try {  
 	    	 long utilDate = rrs.getDate(fldname).getTime();

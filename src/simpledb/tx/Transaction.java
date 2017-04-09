@@ -201,7 +201,7 @@ public class Transaction {
     * @param val the value to be stored
     */
    public void setTimestamp(Block blk, int offset, Date val) {
-      concurMgr.xLock(blk);
+	  concurMgr.xLock(blk);
       Buffer buff = myBuffers.getBuffer(blk);
       int lsn = recoveryMgr.setTimestamp(buff, offset, val);
       buff.setTimestamp(offset, val, txnum, lsn);
