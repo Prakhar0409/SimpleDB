@@ -29,14 +29,13 @@ public class IndexUpdatePlanner implements UpdatePlanner {
       															//TableInfo(schema,Map of fields-offsets,reclen,tbllen)
       															//Schema(fldname,Fieldinfo<type,len>)
       
-      // first, insert the record
+      // first, insert the record								//actually a TableScan casted to UpdateScan
       UpdateScan s = (UpdateScan) p.open();						// Opens a scan corresponding to this plan.
       															// The scan will be positioned before its first record.
       s.insert();												//Inserts a new record somewhere in the scan.
       RID rid = s.getRid();										//gets the RID of the current record.
       
       
-      System.out.println("HUNGRY");
       // then modify each field, inserting an index record if appropriate
       
     //indexes(fldname,IndexInfo<idxname, tblname, fldname, tx>)
