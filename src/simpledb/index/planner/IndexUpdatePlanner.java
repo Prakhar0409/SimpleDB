@@ -55,8 +55,10 @@ public class IndexUpdatePlanner implements UpdatePlanner {
          Constant val = valIter.next();
          
          int fldtype = p.schema().type(fldname);
-         if(fldtype == TIMESTAMP){				//converting string constant to timestamp constant if required 
-        	 val = new TimestampConstant((String)val.asJavaVal());
+         if(fldtype == TIMESTAMP){				//converting string constant to timestamp constant if required
+        	 if(val instanceof StringConstant){
+        		 val = new TimestampConstant((String)val.asJavaVal());
+        	 }
          }
          
          System.out.println("Modify field " + fldname + " to val " + val);
@@ -113,9 +115,17 @@ public class IndexUpdatePlanner implements UpdatePlanner {
       UpdateScan s = (UpdateScan) p.open();
       int count = 0;
       while(s.next()) {
+    	  
          // first, update the record
          Constant newval = data.newValue().evaluate(s);
          Constant oldval = s.getVal(fldname);
+         int fldtype = p.schema().type(fldname);
+         if(fldtype == TIMESTAMP){				//converting string constant to timestamp constant if required
+        	 if(newval instanceof StringConstant){
+        		 newval = new TimestampConstant((String)newval.asJavaVal());
+        	 }
+         }
+         
          s.setVal(data.targetField(), newval);
          
          // then update the appropriate index, if it exists

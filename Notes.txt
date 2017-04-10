@@ -1,0 +1,2 @@
+TableScan checks if a field type is TIMESTAMP and it as a timestamp constant 
+Similarly for fields of type TIMESTAMP, it returns the retrieved timestampConstant as stringConstant

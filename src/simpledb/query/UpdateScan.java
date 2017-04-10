@@ -1,5 +1,7 @@
 package simpledb.query;
 
+import java.util.Date;
+
 import simpledb.record.RID;
 
 /**
@@ -28,6 +30,8 @@ public interface UpdateScan extends Scan {
     */
    public void setString(String fldname, String val);
    
+   public void setTimestamp(String fldname, Date val);
+   
    /**
     * Inserts a new record somewhere in the scan.
     */
@@ -50,4 +54,6 @@ public interface UpdateScan extends Scan {
     * @param rid the RID of the desired record
     */
    public void moveToRid(RID rid);
+
+
 }

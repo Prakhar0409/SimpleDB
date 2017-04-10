@@ -109,6 +109,12 @@ public class BTreeIndex implements Index {
    public void beforeFirstBetween(Constant searchkey,Constant searchkeyBigger) {
       close();
       BTreeDir root = new BTreeDir(rootblk, dirTi, tx);
+      if(searchkey instanceof StringConstant){
+    	  searchkey = new TimestampConstant((String) searchkey.asJavaVal());
+      }
+      if(searchkeyBigger instanceof StringConstant){
+    	  searchkeyBigger = new TimestampConstant((String) searchkeyBigger.asJavaVal());
+      }
       this.smaller = searchkey;
       this.bigger = searchkeyBigger;
       this.blknums = root.searchBetween(searchkey,searchkeyBigger);		//all blocks containing key between the speicfied keys
@@ -188,7 +194,7 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#insert(simpledb.query.Constant, simpledb.record.RID)
     */
    public void insert(Constant dataval, RID datarid) {
-      beforeFirst(dataval);				//sets leaf to the expected leaf
+      beforeFirst(dataval);			//sets leaf to the expected leaf
       DirEntry e = leaf.insert(datarid);
       leaf.close();
       if (e == null)

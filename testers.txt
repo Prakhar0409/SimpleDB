@@ -1,0 +1,115 @@
+select tblname,reclength from tblcat;
+
+select tblname,fldname,type,length,offset from fldcat;
+
+============================Main Testers =============
+
+create table MAN1(Id int,Name varchar(10),Dob timestamp)
+
+insert into MAN1(Id ,Name ,Dob ) values (1,'Anirudh','2011-10-09 20:00:00')
+insert into MAN1(Id ,Name ,Dob ) values (2,'Prakhar','2011-10-10 21:00:00')
+insert into MAN1(Id ,Name ,Dob ) values (3,'Joe','2011-10-09 21:30:00')
+insert into MAN1(Id ,Name ,Dob ) values (4,'Alice','2011-10-09 21:30:01')
+insert into MAN1(Id ,Name ,Dob ) values (5,'Prakhar','2011-10-09 21:30:01')
+
+select id,name,dob from man1
+select id,name,dob from man1 where id=3
+select id,name,dob from man1 where dob='2011-10-09 21:30:01'
+select id,name,dob from man1 where dob between '2011-10-08 20:00:59' '2011-10-10 22:00:00'
+select id,name,dob from man1 where dob between '2011-10-09 21:30:01' '2011-10-09 21:30:01'
+
+update man1 set name='Pro' where name='Prakhar'
+update man1 set name='Prince' where dob='2011-10-09 21:30:01'
+select id,name,dob from man1
+
+delete from man1 where id = 5
+insert into MAN1(Id ,Name ,Dob ) values (5,'Prakhar','2011-10-09 21:30:01')
+
+delete from man1 where id = 5 and dob='2011-10-09 21:30:01'
+insert into MAN1(Id ,Name ,Dob ) values (5,'Prakhar','2011-10-09 21:30:01')
+
+select id,name,dob from man1 where dob='2011-10-09 21:30:01' and id=4 and name='dog'
+
+-----
+
+create table MAN2(Id int,Name varchar(10),Dob timestamp)
+
+create index time on man2(dob)
+create index idIdx on man2(id)
+
+insert into MAN2(Id ,Name ,Dob ) values (1,'Anirudh','2011-10-09 20:00:00')
+
+xxx> select tablename,fieldname,indexname from idxcat
+xxx> update idxcat set indexname='idIdx' where fieldname='id'
+xxx> select tablename,fieldname,indexname from idxcat
+xxx> delete from man2 where id=1
+xxx> insert into MAN2(Id ,Name ,Dob ) values (1,'Anirudh','2011-10-09 20:00:00')
+
+select id,name,dob from man2
+select id,name,dob from man2 where id=3
+select id,name,dob from man2 where id=1
+select id,name,dob from man2 where dob='2011-10-09 21:30:01'
+select id,name,dob from man2 where dob between '2011-10-07 21:30:01' '2011-10-09 21:30:01'
+select id,name,dob from man2 where id=1 and dob='2011-10-09 20:00:00'
+
+insert into MAN2(Id ,Name ,Dob ) values (1,'Anirudh','2011-10-09 20:00:00')
+insert into MAN2(Id ,Name ,Dob ) values (2,'Prakhar','2011-10-10 21:00:00')
+insert into MAN2(Id ,Name ,Dob ) values (3,'Joe','2011-10-09 21:30:00')
+insert into MAN2(Id ,Name ,Dob ) values (4,'Alice','2011-10-09 21:30:01')
+insert into MAN2(Id ,Name ,Dob ) values (5,'Prakhar','2011-10-09 21:30:01')
+
+select id,name,dob from man2
+select id,name,dob from man2 where id=3
+select id,name,dob from man2 where dob='2011-10-09 21:30:01'
+select id,name,dob from man2 where dob between '2011-10-08 20:00:59' '2011-10-10 22:00:00'
+select id,name,dob from man2 where dob between '2011-10-09 21:30:01' '2011-10-09 21:30:01'
+
+select id,name,dob from man2 where dob between '2011-10-09 21:30:02' '2011-10-09 21:30:01' 
+
+update man2 set name='Pro' where name='Prakhar'
+select id,name,dob from man2
+
+update man2 set name='Prince' where dob='2011-10-09 21:30:01'
+select id,name,dob from man2
+
+delete from man2 where id = 5
+select id,name,dob from man2 where id=3
+insert into MAN2(Id ,Name ,Dob ) values (5,'Prakhar','2011-10-09 21:30:01')
+select id,name,dob from man2
+
+
+delete from man2 where id = 5 and dob='2011-10-09 21:30:01'
+
+insert into MAN2(Id ,Name ,Dob ) values (5,'Prakhar','2011-10-09 21:30:01')
+update man2 set name='Prince' where id = 5 and dob='2011-10-09 21:30:01'
+select id,name,dob from man2 where dob='2011-10-09 21:30:01' and id=4 and name='dog'
+
+
+
+=============================
+
+>>>>error
+insert into MAN1(Id ,Name ,Dob ) values (2,'Prakhar','2011-10-09 21:00:aa')
+insert into MAN1(Id ,Name ,Dob ) values (2,'Prakhar','2011-44-43 21:00:00')
+insert into MAN1(Id ,Name ,Dob ) values (2,'Prakhar','2016- 23-31 23:59:59')
+select id,name,dob from man1 where dob between '2011-10-10 22:00:00' '2011-10-08 20:00:00'
+select id,name,dob from man1 where dob between '2011-10-10 22:00:00' '2011-10-08 20:00:61'
+
+select id,name,dob from man1 where dob='2011-44-43 20:00:00'
+
+select id from table where time='2011-44-43 20:00:00'
+
+
+create table MAN1(Id int,Name varchar(10),Dob timestamp)
+
+update man1 set name = 'Prakhar' where name='Anirudh'
+
+delete from man1 where id=1
+
+create index sleep on man1(id)
+
+create index test on man1(dob)
+
+select id,name,dob from man1 where dob='2011-10-09 20:00:00'
+
+select id,name,dob from man1 where dob between '2011-10-08 20:00:00' '2011-10-10 22:00:00'

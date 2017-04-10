@@ -110,9 +110,12 @@ public class TableScan implements UpdateScan {
 //    	 System.out.println("TableScan: STRING TO STRINGCONST");
     	 rf.setString(fldname, (String)val.asJavaVal());
       }else if(sch.type(fldname) == TIMESTAMP){
-//    	  System.out.println("TableScan: converting STRING to TIMESTAMPCONST - done in the indexUpdatePlan");
+//    	  System.out.println("TableScan: converting STRING to TIMESTAMPCONST - done in the indexUpdatePlanner for insert");
 //		  TimestampConstant ts = new TimestampConstant((String)val.asJavaVal());
-//		  rf.setTimestamp(fldname, (Date)ts.asJavaVal());		
+//		  rf.setTimestamp(fldname, (Date)ts.asJavaVal());	
+    	  if(val instanceof StringConstant){
+    		  val = new TimestampConstant((String)val.asJavaVal());
+    	  }
     	  rf.setTimestamp(fldname, (Date)val.asJavaVal());
       }
    }

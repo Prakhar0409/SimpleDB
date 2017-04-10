@@ -93,6 +93,11 @@ public class SelectScan implements UpdateScan {
       us.setString(fldname, val);
    }
    
+   public void setTimestamp(String fldname, Date val) {
+      UpdateScan us = (UpdateScan) s;
+      us.setTimestamp(fldname, val);
+   }
+   
    public void delete() {
       UpdateScan us = (UpdateScan) s;
       us.delete();
