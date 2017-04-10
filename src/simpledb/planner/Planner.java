@@ -28,6 +28,14 @@ public class Planner {
     * @return the scan corresponding to the query plan
     */
    public Plan createQueryPlan(String qry, Transaction tx) {
+	  if(SimpleDB.writer != null){
+		  SimpleDB.writer.println(qry);
+		  SimpleDB.writer.flush();
+	  }
+	  if(qry.equals("close")){
+		  SimpleDB.writer.close();
+		  return null;
+	  }
 	  Parser parser = new Parser(qry);		//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
       QueryData data = parser.query();		//returns QueryData-- note select conditions on timestamp fields are still stringConstants
       										//QueryData(collection<string> fields, collection<string> tables, predicate)
@@ -52,6 +60,7 @@ public class Planner {
    public int executeUpdate(String cmd, Transaction tx) {
 	  if(SimpleDB.writer != null){
 		  SimpleDB.writer.println(cmd);
+		  SimpleDB.writer.flush();
 	  }
 	  if(cmd.equals("close")){
 		  SimpleDB.writer.close();

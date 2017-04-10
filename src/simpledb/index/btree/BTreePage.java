@@ -18,7 +18,7 @@ import simpledb.tx.Transaction;
  * @author Edward Sciore
  */
 public class BTreePage {
-   private Block currentblk;
+   public Block currentblk;
    private TableInfo ti;
    private Transaction tx;
    private int slotsize;
@@ -46,6 +46,7 @@ public class BTreePage {
     */
    public int findSlotBefore(Constant searchkey) {
       int slot = 0;
+      System.out.println("num Recs:"+getNumRecs());
       while (slot < getNumRecs() && getDataVal(slot).compareTo(searchkey) < 0)
          slot++;
       return slot-1;
@@ -184,7 +185,7 @@ public class BTreePage {
     * @return the number of index records in this page
     */
    public int getNumRecs() {
-      return tx.getInt(currentblk, INT_SIZE);
+      return tx.getInt(currentblk, INT_SIZE);			//getInt(blk,offset)
    }
    
    // Private methods

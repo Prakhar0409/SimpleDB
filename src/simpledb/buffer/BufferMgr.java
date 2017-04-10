@@ -19,7 +19,7 @@ import simpledb.file.*;
  * @author Edward Sciore
  */
 public class BufferMgr {
-   private static final long MAX_TIME = 10000; // 10 seconds
+   private static final long MAX_TIME = 10000;	//10seconds 				//10000; // 10 seconds
    private BasicBufferMgr bufferMgr;
    
    /**

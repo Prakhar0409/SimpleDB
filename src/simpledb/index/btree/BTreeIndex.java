@@ -2,11 +2,15 @@ package simpledb.index.btree;
 
 import static java.sql.Types.*;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import simpledb.file.Block;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
+import simpledb.remote.SimpleResultSet;
 import simpledb.query.*;
 import simpledb.index.Index;
 
@@ -19,6 +23,9 @@ public class BTreeIndex implements Index {
    private TableInfo dirTi, leafTi;
    private BTreeLeaf leaf = null;
    private Block rootblk;
+   private List<Integer> blknums;
+   private int currBlkIdx;
+   private Constant smaller,bigger;
 
    /**
     * Opens a B-tree index for the specified index.
@@ -35,7 +42,7 @@ public class BTreeIndex implements Index {
       String leaftbl = idxname + "leaf";
       leafTi = new TableInfo(leaftbl, leafsch);
       if (tx.size(leafTi.fileName()) == 0)
-         tx.append(leafTi.fileName(), new BTPageFormatter(leafTi, -1));
+         tx.append(leafTi.fileName(), new BTPageFormatter(leafTi, -1));		//leaf flag = -1
 
       // deal with the directory
       Schema dirsch = new Schema();
@@ -43,12 +50,12 @@ public class BTreeIndex implements Index {
       dirsch.add("dataval", leafsch);
       String dirtbl = idxname + "dir";
       dirTi = new TableInfo(dirtbl, dirsch);
-      rootblk = new Block(dirTi.fileName(), 0);
+      rootblk = new Block(dirTi.fileName(), 0);			//blk pointer (filename,blknum) - i.e block 0 of file filename
       if (tx.size(dirTi.fileName()) == 0)
          // create new root block
-         tx.append(dirTi.fileName(), new BTPageFormatter(dirTi, 0));
+         tx.append(dirTi.fileName(), new BTPageFormatter(dirTi, 0));			//flag = 0
       BTreePage page = new BTreePage(rootblk, dirTi, tx);
-      if (page.getNumRecs() == 0) {
+      if (page.getNumRecs() == 0) {				//see if the blk is really new
 			// insert initial directory entry
          int fldtype = dirsch.type("dataval");
          Constant minval = null;
@@ -62,14 +69,16 @@ public class BTreeIndex implements Index {
         	 System.out.println("BTreeIndex Panic: unknown data type");
         	 minval =  new StringConstant("");
          }
-         page.insertDir(0, minval, 0);
+         page.insertDir(0, minval, 0);		//page.insertDir(slot,val,blknum) - slot 0 in root page points to blk 0 i.e. root
 		}
       page.close();
+     
+     
    }
 
    /**
     * Traverses the directory to find the leaf block corresponding
-    * to the specified search key.
+    * to the specified search key. and just before search key if search key is not present
     * The method then opens a page for that leaf block, and
     * positions the page before the first record (if any)
     * having that search key.
@@ -80,10 +89,14 @@ public class BTreeIndex implements Index {
    public void beforeFirst(Constant searchkey) {
       close();
       BTreeDir root = new BTreeDir(rootblk, dirTi, tx);
+      
       int blknum = root.search(searchkey);
+      System.out.println(">>>before First rootblknum:"+root.contents.currentblk.number()+"   file:"+root.contents.currentblk.fileName()+"     returned blk:"+blknum+"   flag:"+root.contents.getFlag()+"    numrecs:"+root.contents.getNumRecs());
       root.close();
       Block leafblk = new Block(leafTi.fileName(), blknum);
       leaf = new BTreeLeaf(leafblk, leafTi, searchkey, tx);
+      System.out.println(">>>before First leaf:"+leaf.contents.currentblk.number()+"   file:"+leaf.contents.currentblk.fileName()+"     returned blk:"+blknum+"   flag:"+leaf.contents.getFlag()+"    numrecs:"+leaf.contents.getNumRecs());
+
    }
    
    /**
@@ -99,8 +112,18 @@ public class BTreeIndex implements Index {
    public void beforeFirstBetween(Constant searchkey,Constant searchkeyBigger) {
       close();
       BTreeDir root = new BTreeDir(rootblk, dirTi, tx);
-      int blknum = root.search(searchkey);
+      this.smaller = searchkey;
+      this.bigger = searchkeyBigger;
+      this.blknums = root.searchBetween(searchkey,searchkeyBigger);		//all blocks containing key between the speicfied keys
       root.close();
+      
+      System.out.println("%%% Num of blknums with key between specified:"+blknums.size());
+      if(this.blknums.isEmpty()){
+    	  System.out.println("BTreeIndex Panic: List of blocks is empty");	
+      }
+      
+      this.currBlkIdx = 0;
+      int blknum = this.blknums.get(this.currBlkIdx);
       Block leafblk = new Block(leafTi.fileName(), blknum);
       if(searchkeyBigger == null){
     	  System.out.println("BTreeIndex Panic: In beforeFirstBetween still larger value is null");
@@ -115,7 +138,7 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#next()
     */
    public boolean next() {
-	  //System.out.println("BTreeIndex: calls next");
+	  System.out.println("BTreeIndex: calls next");
       return leaf.next();
    }
    
@@ -126,8 +149,29 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#next()
     */
    public boolean nextBetween() {
-	  //System.out.println("BTreeIndex: calls NEXT-BETWEEN");
-      return leaf.nextBetween();
+	   try{
+		  Constant t = leaf.contents.getDataVal(leaf.currentslot);
+		  if(t instanceof TimestampConstant){
+			  SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			  t = new StringConstant(ts.format(t.asJavaVal()));
+		  }
+		  System.out.println("BTreeIndex: calls NEXT-BETWEEN:  slot:"+leaf.currentslot+"    val:"+t);
+	   }catch(Exception e){
+		   System.out.println("BTreeIndex: calls NEXT-BETWEEN:  slot:"+leaf.currentslot+"    val: null");
+	   }
+	  if(leaf.nextBetween()){
+		  return true;
+	  }else if( this.currBlkIdx + 1 < this.blknums.size() ){
+		  this.currBlkIdx++;
+		  leaf.close();
+		  Block leafblk = new Block(leafTi.fileName(), this.blknums.get(this.currBlkIdx) );
+		  leaf = new BTreeLeaf(leafblk, leafTi, this.smaller,this.bigger, tx);
+		  if(leaf.nextBetween()){
+			  return true;
+		  }
+	  }
+	  System.out.println("BTreeIndex: BITCH");
+      return false;
    }
 
    /**
@@ -150,7 +194,7 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#insert(simpledb.query.Constant, simpledb.record.RID)
     */
    public void insert(Constant dataval, RID datarid) {
-      beforeFirst(dataval);
+      beforeFirst(dataval);				//sets leaf to the expected leaf
       DirEntry e = leaf.insert(datarid);
       leaf.close();
       if (e == null)

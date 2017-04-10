@@ -16,8 +16,8 @@ public class BTreeLeaf {
    private Constant searchkey;
    private Constant searchkeyBigger;
    private boolean between;
-   private BTreePage contents;
-   private int currentslot;
+   public BTreePage contents;
+   public int currentslot;
    
    /**
     * Opens a page to hold the specified leaf block.
@@ -35,6 +35,7 @@ public class BTreeLeaf {
       this.between = false;
       this.searchkeyBigger = null;
       contents = new BTreePage(blk, ti, tx);
+      
       currentslot = contents.findSlotBefore(searchkey);
    }
    
@@ -93,12 +94,12 @@ public class BTreeLeaf {
 //	   System.out.println("BTreeLeaf: calls next. currentslot: "+currentslot+" | numrecs:"+contents.getNumRecs()+" | searchkey:"+searchkey+" | bigger:"+searchkeyBigger);
 	   currentslot++;
       if (currentslot >= contents.getNumRecs()){ 
-    	  System.out.println("BTreeLeaf: try overflow");		//happens on the last record of the leaf
-    	  return tryOverflow();
+    	  System.out.println("BTreeLeaf: tryOverflowBetween");		//happens on the last record of the leaf
+    	  return tryOverflowBetween();
       }else if (between(searchkey,searchkeyBigger,contents.getDataVal(currentslot)))
          return true;
       else 
-         return tryOverflow(); 
+         return tryOverflowBetween(); 
    }
    
    public boolean between(Constant smaller,Constant bigger,Constant target){
@@ -149,7 +150,7 @@ public class BTreeLeaf {
    	// and the searchkey of the new record would be lowest in its page, 
    	// we need to first move the entire contents of that page to a new block
    	// and then insert the new record in the now-empty current page.
-   	if (contents.getFlag() >= 0 && contents.getDataVal(0).compareTo(searchkey) > 0) {
+   	if (contents.getFlag() >= 0 && contents.getDataVal(0).compareTo(searchkey) > 0) {	//if not leaf and firstkey > searchkey
    		Constant firstval = contents.getDataVal(0);
    		Block newblk = contents.split(0, contents.getFlag());
    		currentslot = 0;
@@ -157,7 +158,7 @@ public class BTreeLeaf {
    		contents.insertLeaf(currentslot, searchkey, datarid); 
    		return new DirEntry(firstval, newblk.number());  
    	}
-	  
+   	
       currentslot++;
       contents.insertLeaf(currentslot, searchkey, datarid);
       if (!contents.isFull())
@@ -194,6 +195,19 @@ public class BTreeLeaf {
       Constant firstkey = contents.getDataVal(0);
       int flag = contents.getFlag();
       if (!searchkey.equals(firstkey) || flag < 0)
+         return false;
+      contents.close();
+      Block nextblk = new Block(ti.fileName(), flag);
+      contents = new BTreePage(nextblk, ti, tx);
+      currentslot = 0;
+      return true;
+   }
+   
+   private boolean tryOverflowBetween() {
+      Constant firstkey = contents.getDataVal(0);
+      Constant lastkey = contents.getDataVal(contents.getNumRecs()-1);
+      int flag = contents.getFlag();
+      if (!firstkey.equals(lastkey) || flag < 0)
          return false;
       contents.close();
       Block nextblk = new Block(ti.fileName(), flag);

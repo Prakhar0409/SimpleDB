@@ -1,9 +1,14 @@
 package simpledb.index.btree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import simpledb.file.Block;
 import simpledb.tx.Transaction;
 import simpledb.record.TableInfo;
 import simpledb.query.Constant;
+import simpledb.query.StringConstant;
+import simpledb.query.TimestampConstant;
 
 /**
  * A B-tree directory block.
@@ -13,7 +18,7 @@ public class BTreeDir {
    private TableInfo ti;
    private Transaction tx;
    private String filename;
-   private BTreePage contents;
+   public BTreePage contents;
 
    /**
     * Creates an object to hold the contents of the specified
@@ -44,12 +49,43 @@ public class BTreeDir {
     */
    public int search(Constant searchkey) {
       Block childblk = findChildBlock(searchkey);
-      while (contents.getFlag() > 0) {
+      System.out.println("BTREE DIR: childblk: "+childblk.number()+"    flag:"+contents.getFlag()+"    currblknum:"+contents.currentblk.number());
+      while (contents.getFlag() > 0) {					//do this until u reach prefinal block. Leaves have flag=0; parents of leaves have flag = 0
          contents.close();
          contents = new BTreePage(childblk, ti, tx);
          childblk = findChildBlock(searchkey);
       }
-      return childblk.number();
+      return childblk.number();							//return prefinal block whose child has the search key
+   }
+   
+   /**
+    * Returns the block number of the B-tree leaf block
+    * that contains key between the specified search keys.
+    * @param searchkey the smaller key value
+    * @param searchkey the bigger key value
+    * @return the block number of the leaf block containing that search key
+    */
+   public List<Integer> searchBetween(Constant searchkey,Constant bigger) {
+      List<Block> childblks = findChildBlockBetween(searchkey,bigger);
+      System.out.println("Num Childblks:"+childblks.size()+"     contents"+contents+ "      flag"+contents.getFlag());
+      List<Integer> childblkNums = new ArrayList<Integer>();
+  	  //contents.getFlag == 0 for nodes just above the leaf
+      if (contents.getFlag() > 0) {					//if the current block is not leaf			
+         contents.close();						//close current page
+         for(int i=0;i<childblks.size();i++){
+        	 Block childblk = childblks.get(i);				//get ith block
+        	 contents = new BTreePage(childblk, ti, tx);	//set it to contents
+        	 childblkNums.addAll(searchBetween(searchkey,bigger));
+        	 contents.close();		//close whatever childblk was left open
+         }
+      }else{
+    	  //return all the child blks
+    	  for(int i=0;i<childblks.size();i++){
+    		  childblkNums.add(childblks.get(i).number());
+    	  }
+      }
+      return childblkNums;
+      
    }
 
    /**
@@ -109,9 +145,52 @@ public class BTreeDir {
 
    private Block findChildBlock(Constant searchkey) {
       int slot = contents.findSlotBefore(searchkey);
+	  System.out.println("Slotnum-:"+slot);
       if (contents.getDataVal(slot+1).equals(searchkey))
          slot++;
+      
       int blknum = contents.getChildNum(slot);
       return new Block(filename, blknum);
+   }
+   
+   private List<Block> findChildBlockBetween(Constant searchkey,Constant bigger) {
+      bigger = new TimestampConstant((String)bigger.asJavaVal());
+	  int slotmin = contents.findSlotBefore(searchkey);
+      int slotmax = contents.findSlotBefore(bigger);
+      if (contents.getDataVal(slotmin+1).equals(searchkey) || slotmin==-1)
+          slotmin++;
+      
+      if (contents.getDataVal(slotmax+1).equals(bigger) || slotmax==-1)
+          slotmax++;
+      
+      List<Block> blks = new ArrayList<Block>();
+      int blknum;
+	  System.out.println("Slotnum- min:"+slotmin+"     max:"+slotmax +"     ");
+      for(int i=slotmin;i<=slotmax;i++){
+    	  blknum = contents.getChildNum(i);
+    	  blks.add(new Block(filename, blknum));
+      }
+      return blks;
+   }
+   
+   public boolean compareBetween(Constant target,Constant smaller,Constant bigger){
+	   if(target instanceof StringConstant){
+//		   System.out.println("Target was string");
+		   target = new TimestampConstant((String)target.asJavaVal());
+	   }
+	   if(smaller instanceof StringConstant){
+//		   System.out.println("Smaller was string");
+		   smaller = new TimestampConstant((String)smaller.asJavaVal());
+	   }
+	   if(bigger instanceof StringConstant){
+//		   System.out.println("Bigger was string");
+		   bigger = new TimestampConstant((String)bigger.asJavaVal());
+	   }
+	   
+	   if( ((TimestampConstant)smaller).asJavaVal().getTime() <= ((TimestampConstant)target).asJavaVal().getTime()  &&
+			   ((TimestampConstant)target).asJavaVal().getTime() <= ((TimestampConstant)bigger).asJavaVal().getTime()  ){
+		   return true;
+	   }
+	   return false;
    }
 }
