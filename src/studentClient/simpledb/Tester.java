@@ -24,8 +24,9 @@ public class Tester {
 		}
 		finally {
 			try {
-				if (conn != null)
+				if (conn != null){
 					conn.close();
+				}
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
@@ -34,7 +35,7 @@ public class Tester {
 	}
     
     public static String[] s = {"create table table1(Id int, StudentID varchar(11), entrytime timestamp)",
-//    		"create index btreeindex on table1(entrytime);",
+    		"create index btreeindex on table1(entrytime);",
     		"insert into table1(Id, StudentID, entrytime) values (1, '2014CS10036', '2016-08-02 17:47:41')",
     		"insert into table1(Id, StudentID, entrytime) values (2, '2014CS10034', '2016-07-09 03:20:32')",
     		"insert into table1(Id, StudentID, entrytime) values (3, '2014CS10044', '2016-01-09 23:51:53')",

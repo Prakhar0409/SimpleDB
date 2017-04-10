@@ -45,6 +45,8 @@ class LogRecordIterator implements Iterator<LogRecord> {
             return new SetIntRecord(rec);
          case SETSTRING:
             return new SetStringRecord(rec);
+         case SETTIMESTAMP:
+             return new SetTimestampRecord(rec);
          default:
             return null;
       }

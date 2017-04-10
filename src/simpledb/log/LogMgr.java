@@ -42,13 +42,13 @@ public class LogMgr implements Iterable<BasicLogRecord> {
     */
    public LogMgr(String logfile) {
       this.logfile = logfile;
-      int logsize = SimpleDB.fileMgr().size(logfile);
+      int logsize = SimpleDB.fileMgr().size(logfile);		//size returns filesize/BLOCK_SIZE - in a sense blknum
       if (logsize == 0)
          appendNewBlock();
       else {
-         currentblk = new Block(logfile, logsize-1);
+         currentblk = new Block(logfile, logsize-1);		//Block(filename,blknum)
          mypage.read(currentblk);
-         currentpos = getLastRecordPosition() + INT_SIZE;
+         currentpos = getLastRecordPosition() + INT_SIZE;	// 4 bytes for the integer that points to the previous log record
       }
    }
 
@@ -106,8 +106,10 @@ public class LogMgr implements Iterable<BasicLogRecord> {
          mypage.setString(currentpos, (String)val);
       else if( val instanceof Integer)
          mypage.setInt(currentpos, (Integer)val);
-      else 	// instance of timestamp - Date
+      else if(val instanceof Date)	// instance of timestamp - Date
     	  mypage.setTimestamp(currentpos, (Date)val);
+      else
+    	  System.out.println("LogMgr PANIC: Unknown data type found");
       currentpos += size(val);
    }
 

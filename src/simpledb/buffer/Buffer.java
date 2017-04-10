@@ -20,7 +20,7 @@ public class Buffer {
    private Page contents = new Page();
    private Block blk = null;
    private int pins = 0;
-   private int modifiedBy = -1;  // negative means not modified
+   private int modifiedBy = -1;  // negative means not modified else keeps txnnum that modified it
    private int logSequenceNumber = -1; // negative means no corresponding log record
 
    /**

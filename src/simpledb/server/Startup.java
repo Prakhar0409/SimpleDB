@@ -11,6 +11,7 @@ public class Startup {
 	  } 
 	  // configure and initialize the database
       SimpleDB.init(args[0]);
+      System.out.println("Started. Creating registery");
       
       // create a registry specific for the server on the default port
       Registry reg = LocateRegistry.createRegistry(1099);

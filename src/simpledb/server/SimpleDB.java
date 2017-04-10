@@ -49,6 +49,7 @@ public class SimpleDB {
       else {
          System.out.println("recovering existing database");
          tx.recover();
+         System.out.println("Txn recovered");
       }
       initMetadataMgr(isnew, tx);
       tx.commit();
@@ -94,7 +95,8 @@ public class SimpleDB {
     */
    public static void initFileLogAndBufferMgr(String dirname) {
       initFileAndLogMgr(dirname);
-      bm = new BufferMgr(BUFFER_SIZE);			//buffer_sze is 8
+      //BufferMgr(BasicBufferMgr, maxtime)  ---> BasicBufferMgr( private Buffer[] bufferpool;numAvailable;)
+      bm = new BufferMgr(BUFFER_SIZE);			//buffer_sze is 8 - denotes number of buffers
    }
    
    /**
