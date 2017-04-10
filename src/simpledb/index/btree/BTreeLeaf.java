@@ -4,6 +4,7 @@ import simpledb.file.Block;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
 import simpledb.query.Constant;
+import simpledb.query.StringConstant;
 import simpledb.query.TimestampConstant;
 
 /**
@@ -48,12 +49,15 @@ public class BTreeLeaf {
     * @param searchkey the <= search key value
     * @param searchkeyBigger the >= search key value
     * @param tx the calling transaction
-    */
+    */	//used only for timestamp values
    public BTreeLeaf(Block blk, TableInfo ti, Constant searchkey,Constant searchkeyBigger, Transaction tx) {
       this.ti = ti;
       this.tx = tx;
       this.searchkey = searchkey;
       this.between = true;
+      if(searchkeyBigger instanceof StringConstant){
+    	  searchkeyBigger = new TimestampConstant((String)searchkeyBigger.asJavaVal());
+      }
       this.searchkeyBigger = searchkeyBigger;
       contents = new BTreePage(blk, ti, tx);
       currentslot = contents.findSlotBefore(searchkey);
@@ -101,9 +105,20 @@ public class BTreeLeaf {
    }
    
    public boolean between(Constant smaller,Constant bigger,Constant target){
+	   if(target instanceof StringConstant){
+		   target = new TimestampConstant((String)target.asJavaVal());
+	   }
+	   if(smaller instanceof StringConstant){
+		   smaller = new TimestampConstant((String)smaller.asJavaVal());
+	   }
+	   if(bigger instanceof StringConstant){
+		   bigger = new TimestampConstant((String)bigger.asJavaVal());
+	   }
+	   
 	   long targetv = ((TimestampConstant)target).asJavaVal().getTime();
 	   long smallerv = ((TimestampConstant)smaller).asJavaVal().getTime();
-	   long biggerv = (new TimestampConstant((String)bigger.asJavaVal())).asJavaVal().getTime();
+	   
+	   long biggerv = ((TimestampConstant)bigger).asJavaVal().getTime();
 	   if(smallerv <= targetv && targetv<=biggerv){
 		   return true;
 	   }

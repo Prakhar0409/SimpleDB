@@ -152,7 +152,12 @@ public class BTreeDir {
    }
    
    private List<Block> findChildBlockBetween(Constant searchkey,Constant bigger) {
-      bigger = new TimestampConstant((String)bigger.asJavaVal());
+      if(searchkey instanceof StringConstant){
+    	  searchkey = new TimestampConstant((String)searchkey.asJavaVal());
+      }
+	  if(bigger instanceof StringConstant){
+    	  bigger = new TimestampConstant((String)bigger.asJavaVal());
+      }
 	  int slotmin = contents.findSlotBefore(searchkey);
       int slotmax = contents.findSlotBefore(bigger);
       if (contents.getDataVal(slotmin+1).equals(searchkey) || slotmin==-1)
