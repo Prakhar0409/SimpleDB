@@ -54,7 +54,8 @@ public class Parser {
     	  long big = (new TimestampConstant ( (String)extra.asConstant().asJavaVal())).asJavaVal().getTime();
     	  if(big<small){
     		  System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> InvalidIntervalError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    		  throw new InvalidIntervalError();
+//    		  throw new InvalidIntervalError();
+    		  throw new RuntimeException("InvalidIntervalError");
     	  }else{
     		  return new Term(lhs, rhs, extra);
     	  }

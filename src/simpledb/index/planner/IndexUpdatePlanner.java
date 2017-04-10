@@ -40,7 +40,8 @@ public class IndexUpdatePlanner implements UpdatePlanner {
       System.out.println("NUM RECORDS (before insertion): "+si.recordsOutput());
       if(si.recordsOutput() >= 100000){
     	  System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> SERVER: MemoryError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    	  throw new MemoryError();
+//    	  throw new MemoryError();
+    	  throw new RuntimeException("MemoryError");
       }
       s.insert();												//Inserts a new record somewhere in the scan.
       RID rid = s.getRid();										//gets the RID of the current record.

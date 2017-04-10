@@ -145,11 +145,9 @@ public class Page {
    public synchronized String getString(int offset) {
 	  contents.position(offset);
       int len = contents.getInt();
-//      System.out.print("Getting: from offset:"+ offset  +"        String len: "+len);
       byte[] byteval = new byte[len];
       contents.get(byteval);
       String ret = new String(byteval);
-//      System.out.println("       String: "+ret);
       return ret;
    }
    

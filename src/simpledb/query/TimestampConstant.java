@@ -32,7 +32,8 @@ public class TimestampConstant implements Constant {
       } catch (ParseException e) {
 		 //		e.printStackTrace();
 	 	 System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> SERVER: InvalidDateFormatError <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-	 	 throw new InvalidDateFormatError();
+//	 	 throw new InvalidDateFormatError();
+	 	throw new RuntimeException("InvalidDateFormatError");
       }  
    }
    
