@@ -47,9 +47,7 @@ public class RecoveryMgr {
     */
    public void recover() {
       doRecover();
-      System.out.println("Recovery Manager: Done recovering");
       SimpleDB.bufferMgr().flushAll(txnum);
-      System.out.println("Recovery Manager: Flsuhed again");
       int lsn = new CheckpointRecord().writeToLog();
       SimpleDB.logMgr().flush(lsn);
 
@@ -136,12 +134,8 @@ public class RecoveryMgr {
    private void doRecover() {
       Collection<Integer> finishedTxs = new ArrayList<Integer>();
       Iterator<LogRecord> iter = new LogRecordIterator();
-      int i=0;
       while (iter.hasNext()) {
-    	  i++;
-    	  System.out.println("Going through logs:"+i);
          LogRecord rec = iter.next();
-         System.out.println("Going through logs:"+i+"   log rec:"+rec);
          if (rec.op() == CHECKPOINT)
             return;
          if (rec.op() == COMMIT || rec.op() == ROLLBACK)

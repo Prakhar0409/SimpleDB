@@ -33,8 +33,9 @@ public class Planner {
 		  SimpleDB.writer.flush();
 	  }
 	  if(qry.equals("close")){
-		  SimpleDB.writer.close();
-		  return null;
+		  if(SimpleDB.writer != null){
+			  SimpleDB.writer.close();
+		  }
 	  }
 	  Parser parser = new Parser(qry);		//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
       QueryData data = parser.query();		//returns QueryData-- note select conditions on timestamp fields are still stringConstants
@@ -63,8 +64,10 @@ public class Planner {
 		  SimpleDB.writer.flush();
 	  }
 	  if(cmd.equals("close")){
-		  SimpleDB.writer.close();
-		  return 0;
+		  if(SimpleDB.writer != null){
+			  SimpleDB.writer.close();
+		  }
+//		  return 0;
 	  }
 	  Parser parser = new Parser(cmd);					//just tokenizes the command by calling a streamtokeniser on it. Does not even starts eating the tokens
       Object obj = parser.updateCmd();					//Obj is the following

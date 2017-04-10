@@ -99,6 +99,23 @@ class RemoteResultSetImpl extends UnicastRemoteObject implements RemoteResultSet
     * by returning the corresponding value on the saved scan.
     * @see simpledb.remote.RemoteResultSet#getTimestamp(java.lang.String)
     */
+   public java.util.Date getTimestampP2(String fldname) throws RemoteException {
+		try {
+	      fldname = fldname.toLowerCase(); // to ensure case-insensitivity
+	      return s.getTimestamp(fldname);
+//	      return new Timestamp(s.getTimestamp(fldname).getTime());
+      }
+      catch(RuntimeException e) {
+         rconn.rollback();
+         throw e;
+      }
+   }
+   
+   /**
+    * Returns the timestamp value of the specified field,
+    * by returning the corresponding value on the saved scan.
+    * @see simpledb.remote.RemoteResultSet#getTimestamp(java.lang.String)
+    */
    public Date getDate(String fldname) throws RemoteException {
 		try {
 	      fldname = fldname.toLowerCase(); // to ensure case-insensitivity

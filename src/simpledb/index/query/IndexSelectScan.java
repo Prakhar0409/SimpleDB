@@ -87,10 +87,8 @@ public class IndexSelectScan implements Scan {
 	  boolean ok = false;
 	  if(between){
 		  //do this for between queries else do idx.next
-		  System.out.println("IndexSelectScan: next-between");
 		  ok = ((BTreeIndex) idx).nextBetween();
 	  }else{
-		  System.out.println("IndexSelectScan: next.");
 		  ok = idx.next();
 	  }
 	  

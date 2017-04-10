@@ -49,15 +49,14 @@ public class SimpleDB {
       else {
          System.out.println("recovering existing database");
          tx.recover();
-         System.out.println("Txn recovered");
       }
       initMetadataMgr(isnew, tx);
       tx.commit();
-      try{
-    	  writer = new PrintWriter("Queries.txt", "UTF-8");
-      }catch(Exception e){
-    	  System.out.println("Could not open a write file");
-      }
+//      try{
+//    	  writer = new PrintWriter("Queries.txt", "UTF-8");
+//      }catch(Exception e){
+//    	  System.out.println("Could not open a write file");
+//      }
    }
    
    // The following initialization methods are useful for 

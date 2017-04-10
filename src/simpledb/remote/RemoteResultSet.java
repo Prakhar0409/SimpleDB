@@ -15,6 +15,7 @@ public interface RemoteResultSet extends Remote {
    public int getInt(String fldname)       throws RemoteException;
    public String getString(String fldname) throws RemoteException;
    public java.util.Date getTimestamp(String fldname) throws RemoteException;
+   public java.util.Date getTimestampP2(String fldname) throws RemoteException;
    public Date getDate(String fldname) throws RemoteException;
    public RemoteMetaData getMetaData()     throws RemoteException;
    public void close()                     throws RemoteException;

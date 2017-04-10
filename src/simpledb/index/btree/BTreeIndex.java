@@ -89,13 +89,10 @@ public class BTreeIndex implements Index {
    public void beforeFirst(Constant searchkey) {
       close();
       BTreeDir root = new BTreeDir(rootblk, dirTi, tx);
-      
       int blknum = root.search(searchkey);
-      System.out.println(">>>before First rootblknum:"+root.contents.currentblk.number()+"   file:"+root.contents.currentblk.fileName()+"     returned blk:"+blknum+"   flag:"+root.contents.getFlag()+"    numrecs:"+root.contents.getNumRecs());
       root.close();
       Block leafblk = new Block(leafTi.fileName(), blknum);
       leaf = new BTreeLeaf(leafblk, leafTi, searchkey, tx);
-      System.out.println(">>>before First leaf:"+leaf.contents.currentblk.number()+"   file:"+leaf.contents.currentblk.fileName()+"     returned blk:"+blknum+"   flag:"+leaf.contents.getFlag()+"    numrecs:"+leaf.contents.getNumRecs());
 
    }
    
@@ -117,7 +114,6 @@ public class BTreeIndex implements Index {
       this.blknums = root.searchBetween(searchkey,searchkeyBigger);		//all blocks containing key between the speicfied keys
       root.close();
       
-      System.out.println("%%% Num of blknums with key between specified:"+blknums.size());
       if(this.blknums.isEmpty()){
     	  System.out.println("BTreeIndex Panic: List of blocks is empty");	
       }
@@ -138,7 +134,6 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#next()
     */
    public boolean next() {
-	  System.out.println("BTreeIndex: calls next");
       return leaf.next();
    }
    
@@ -149,16 +144,16 @@ public class BTreeIndex implements Index {
     * @see simpledb.index.Index#next()
     */
    public boolean nextBetween() {
-	   try{
-		  Constant t = leaf.contents.getDataVal(leaf.currentslot);
-		  if(t instanceof TimestampConstant){
-			  SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			  t = new StringConstant(ts.format(t.asJavaVal()));
-		  }
-		  System.out.println("BTreeIndex: calls NEXT-BETWEEN:  slot:"+leaf.currentslot+"    val:"+t);
-	   }catch(Exception e){
-		   System.out.println("BTreeIndex: calls NEXT-BETWEEN:  slot:"+leaf.currentslot+"    val: null");
-	   }
+//	   try{
+//		  Constant t = leaf.contents.getDataVal(leaf.currentslot);
+//		  if(t instanceof TimestampConstant){
+//			  SimpleDateFormat ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			  t = new StringConstant(ts.format(t.asJavaVal()));
+//		  }
+//		  System.out.println("BTreeIndex: calls NEXT-BETWEEN:  slot:"+leaf.currentslot+"    val:"+t);
+//	   }catch(Exception e){
+//		   System.out.println("BTreeIndex: calls NEXT-BETWEEN:  slot:"+leaf.currentslot+"    val: null");
+//	   }
 	  if(leaf.nextBetween()){
 		  return true;
 	  }else if( this.currBlkIdx + 1 < this.blknums.size() ){
@@ -170,7 +165,6 @@ public class BTreeIndex implements Index {
 			  return true;
 		  }
 	  }
-	  System.out.println("BTreeIndex: BITCH");
       return false;
    }
 

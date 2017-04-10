@@ -76,7 +76,6 @@ public class BTreeLeaf {
 	  //System.out.println("BTreeLeaf: calls next. currentslot: "+currentslot+" | numrecs:"+contents.getNumRecs()+" | searchkey:"+searchkey);
 	  currentslot++;
       if (currentslot >= contents.getNumRecs()){ 
-    	  System.out.println("BTreeLeaf: try overflow");
     	  return tryOverflow();
       }else if (contents.getDataVal(currentslot).equals(searchkey))
          return true;
@@ -94,7 +93,6 @@ public class BTreeLeaf {
 //	   System.out.println("BTreeLeaf: calls next. currentslot: "+currentslot+" | numrecs:"+contents.getNumRecs()+" | searchkey:"+searchkey+" | bigger:"+searchkeyBigger);
 	   currentslot++;
       if (currentslot >= contents.getNumRecs()){ 
-    	  System.out.println("BTreeLeaf: tryOverflowBetween");		//happens on the last record of the leaf
     	  return tryOverflowBetween();
       }else if (between(searchkey,searchkeyBigger,contents.getDataVal(currentslot)))
          return true;

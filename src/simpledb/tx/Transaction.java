@@ -80,7 +80,6 @@ public class Transaction {
     */
    public void recover() {
       SimpleDB.bufferMgr().flushAll(txnum);
-      System.out.println("Transaction: Flushed the buffers");
       recoveryMgr.recover();
    }
    

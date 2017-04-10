@@ -57,24 +57,24 @@ public class SimpleResultSet extends ResultSetAdapter {
    //rrs.getTimestamp returns java.util.Date
    public java.util.Date getTimestampP2(String fldname) throws SQLException {
       try {
-         return rrs.getTimestamp(fldname);
+         return rrs.getTimestampP2(fldname);
       }
       catch (Exception e) {
          throw new SQLException(e);
       }
    }
    
-   //rrs.getTimestamp returns java.util.Date
+   //rrs.getTimestamp returns java.util.Date but this function returns java.sql.Date
    public Date getDate(String fldname) throws SQLException {
-	      try {  
-	    	 long utilDate = rrs.getDate(fldname).getTime();
-	    	 Date d = new Date(utilDate);
-	         return d; 
-	      }
-	      catch (Exception e) {
-	         throw new SQLException(e);
-	      }
-	   }
+      try {  
+    	 long utilDate = rrs.getDate(fldname).getTime();
+    	 Date d = new Date(utilDate);
+         return d; 
+      }
+      catch (Exception e) {
+         throw new SQLException(e);
+      }
+   }
    
    public ResultSetMetaData getMetaData() throws SQLException {
       try {

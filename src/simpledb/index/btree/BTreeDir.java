@@ -49,7 +49,6 @@ public class BTreeDir {
     */
    public int search(Constant searchkey) {
       Block childblk = findChildBlock(searchkey);
-      System.out.println("BTREE DIR: childblk: "+childblk.number()+"    flag:"+contents.getFlag()+"    currblknum:"+contents.currentblk.number());
       while (contents.getFlag() > 0) {					//do this until u reach prefinal block. Leaves have flag=0; parents of leaves have flag = 0
          contents.close();
          contents = new BTreePage(childblk, ti, tx);
@@ -67,7 +66,6 @@ public class BTreeDir {
     */
    public List<Integer> searchBetween(Constant searchkey,Constant bigger) {
       List<Block> childblks = findChildBlockBetween(searchkey,bigger);
-      System.out.println("Num Childblks:"+childblks.size()+"     contents"+contents+ "      flag"+contents.getFlag());
       List<Integer> childblkNums = new ArrayList<Integer>();
   	  //contents.getFlag == 0 for nodes just above the leaf
       if (contents.getFlag() > 0) {					//if the current block is not leaf			
@@ -145,7 +143,7 @@ public class BTreeDir {
 
    private Block findChildBlock(Constant searchkey) {
       int slot = contents.findSlotBefore(searchkey);
-	  System.out.println("Slotnum-:"+slot);
+//	  System.out.println("Slotnum-:"+slot);
       if (contents.getDataVal(slot+1).equals(searchkey))
          slot++;
       
@@ -165,7 +163,7 @@ public class BTreeDir {
       
       List<Block> blks = new ArrayList<Block>();
       int blknum;
-	  System.out.println("Slotnum- min:"+slotmin+"     max:"+slotmax +"     ");
+//	  System.out.println("Slotnum- min:"+slotmin+"     max:"+slotmax +"     ");
       for(int i=slotmin;i<=slotmax;i++){
     	  blknum = contents.getChildNum(i);
     	  blks.add(new Block(filename, blknum));
